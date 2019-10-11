@@ -1,5 +1,5 @@
 import {MinHeap} from './Helper/minHeap'
-
+const heap = new MinHeap([])
 export function dijkstra(grid, startNode, finishNode) {
     
     if(!startNode || !finishNode || startNode === finishNode)
@@ -9,16 +9,64 @@ export function dijkstra(grid, startNode, finishNode) {
     startNode.distance = 0
     const unvisitedNodes = getAllNodes(grid)
 
-    const heap = new MinHeap(unvisitedNodes)
-    
-    //console.log('min '+JSON.stringify(heap.getMin()))
+    const n = [{
+        a : '1',
+        distance : 1
 
-    while (/*unvisitedNodes.length !== 0*/!heap.isEmpty()) {
-        //sortUnvistedNodesByDistance(unvisitedNodes)
-        //const closestNode = unvisitedNodes.shift()
-        
+    },{
+        a : '4',
+        distance : 4
+
+    },{
+        a : '6',
+        distance : 6
+
+    },{
+        a : '89',
+        distance : 89
+
+    },{
+        a : '34',
+        distance : 34
+
+    },{
+        a : '5',
+        distance : 5
+
+    },{
+        a : '7',
+        distance : 7
+
+    }]
+
+    /*const heap = new MinHeap([n[0]])
+    heap.insert(n[1])
+    heap.insert(n[2])
+    heap.insert(n[3])
+    heap.insert(n[4])
+    heap.insert(n[5])
+    
+    //console.log('lchild of 5 =' + heap.getLeftChildData(2).distance)
+    //console.log('rchild of 5 =' + heap.hasRightChild(2))
+
+    console.log(heap.extractMin())
+    console.log(heap.extractMin())
+    console.log(heap.extractMin()) 
+    console.log(heap.extractMin())
+    console.log(heap.extractMin())
+    console.log(heap.extractMin())*/
+
+    //console.log(heap.extractMin())
+    //console.log('min '+JSON.stringify(heap.getMin()))
+    
+    heap.insert(startNode)
+    
+    while (!heap.isEmpty()) {
         const closestNode = heap.extractMin()
-        console.log(closestNode)
+        //console.log(closestNode)
+        
+        if(closestNode.isVisited) continue
+
         closestNode.isVisited = true;
         //If the node is wall then ignore it
         if(closestNode.isWall) continue
@@ -33,6 +81,32 @@ export function dijkstra(grid, startNode, finishNode) {
         //Update the distance and parent of the neighbouring nodes
         updateUnvisitedNeighbours(closestNode, grid)
     }
+
+    /*while (unvisitedNodes.length !== 0) {
+        sortUnvistedNodesByDistance(unvisitedNodes)
+        const closestNode = unvisitedNodes.shift()
+        
+        //const closestNode = heap.extractMin()
+        console.log(closestNode)
+        
+        if(closestNode.isVisited) continue
+
+        closestNode.isVisited = true;
+        //If the node is wall then ignore it
+        if(closestNode.isWall) continue
+        //If the start node is fully surrounded by wall
+        if(closestNode.distance === Infinity) return visitedNodeOrder
+        //If the node is visited then add it to the visited list
+        visitedNodeOrder.push(closestNode)
+        //If target node is found
+        if(closestNode === finishNode){
+            //heap.insert(visitedNodeOrder)
+            //console.log('min '+JSON.stringify(heap.extractMin()))
+            return visitedNodeOrder
+        }
+        //Update the distance and parent of the neighbouring nodes
+        updateUnvisitedNeighbours(closestNode, grid)
+    }*/
 }
 
 function sortUnvistedNodesByDistance(unvisitedNodes){
@@ -44,6 +118,8 @@ function updateUnvisitedNeighbours(node, grid){
     for(const neighbour of unvisitedNeighbours){
         neighbour.distance = node.distance + 1
         neighbour.previousNode = node
+        
+        heap.insert(neighbour)
     }
 }
 

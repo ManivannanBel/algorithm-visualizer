@@ -9,8 +9,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 
 const START_POS_ROW = 10
 const START_POS_COL = 5
-const FINISH_POS_ROW = 0
-const FINISH_POS_COL = 0
+const FINISH_POS_ROW = 19
+const FINISH_POS_COL = 45
 
 export class VisualizerComponent extends Component {
 

@@ -47,11 +47,16 @@ export class MinHeap {
          };
 
          extractMin = () => {
+            
+           if(this.heapNode.length === 1){
+               return this.heapNode.shift();
+           }
            if (this.heapNode.length !== 0) {
-             const minValue = this.heapNode.shift;
+             //console.log(this.heapNode.slice())
+             const minValue = this.heapNode.shift();
              const lastValue = this.heapNode.pop();
              this.heapNode.unshift(lastValue);
-             this.heapifyDown(0);
+             this.heapifyDown();
              return minValue;
            }
          };
@@ -66,45 +71,32 @@ export class MinHeap {
            this.heapNode.push(node);
           // console.log(this.heapNode)
            //console.log(node)
-           this.heapifyUp(this.heapNode.length - 1);
+           this.heapifyUp();
          };
 
-         heapifyDown = index => {
-           let parentIndex = index;
-           //let parent = Object.assign(this.heapNode[parentIndex]);
+         heapifyDown = () => {
+           let index = 0
+           while(this.hasLeftChild(index)){
+               let smallerChildIndex = this.getLeftChildIndex(index)
+               if(this.hasRightChild(index) && this.getLeftChildData(index).distance > this.getRightChildData(index).distance){
+                   smallerChildIndex = this.getRightChildIndex(index)
+               }
 
-           let parent = (this.heapNode[parentIndex]);
+               let currentData =Object.assign(this.heapNode[index])
+               let smallestChildData = Object.assign(this.heapNode[smallerChildIndex])
 
-           while (this.hasLeftChild(parentIndex)) {
-             let leftIndex = this.getLeftChildIndex(parentIndex);
-             let rightIndex = leftIndex;
-             if (this.hasRightChild(parentIndex)) {
-               rightIndex = this.getRightChildIndex(parentIndex);
-             }
-
-             //let leftChild = Object.assign(this.getLeftChildData(leftIndex));
-             //let rightChild = Object.assign(this.getRightChildData(rightIndex));
-
-             let leftChild = (this.getLeftChildData(leftIndex));
-             let rightChild = (this.getRightChildData(rightIndex));
-
-
-             if (parent.distance > leftChild.distance) {
-               this.heapNode[leftIndex] = parent;
-               this.heapNode[parentIndex] = leftChild;
-               parentIndex = leftIndex;
-             } else if (parent.distance > rightChild.distance) {
-               this.heapNode[rightIndex] = parent;
-               this.heapNode[parentIndex] = rightChild;
-               parentIndex = rightIndex;
-             } else {
-               break;
-             }
+               if(currentData.distance < smallestChildData.distance){
+                    break;
+               }else{
+                    this.heapNode[smallerChildIndex] = currentData
+                    this.heapNode[index] = smallestChildData
+               }
+               index = smallerChildIndex
            }
          };
 
-         heapifyUp = index => {
-           let currentIndex = index;
+         heapifyUp = () => {
+           let currentIndex = this.heapNode.length - 1;
            while (this.hasParent(currentIndex)) {
              let parentIndex = this.getParentIndex(currentIndex);
              //let parent = Object.assign(this.getParentData(currentIndex));
@@ -114,7 +106,8 @@ export class MinHeap {
 
              let parent = (this.heapNode[parentIndex]);
              let current = (this.heapNode[currentIndex]);
-
+             //console.log('parentI= '+parentIndex +" childI= "+ currentIndex)
+             //console.log('parent= '+(parent) +" child= "+(current))
              if (current.distance < parent.distance) {
                this.heapNode[parentIndex] = current;
                this.heapNode[currentIndex] = parent;
