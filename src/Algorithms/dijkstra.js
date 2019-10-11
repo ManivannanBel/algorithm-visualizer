@@ -1,3 +1,5 @@
+import {MinHeap} from './Helper/minHeap'
+
 export function dijkstra(grid, startNode, finishNode) {
     
     if(!startNode || !finishNode || startNode === finishNode)
@@ -6,9 +8,17 @@ export function dijkstra(grid, startNode, finishNode) {
     const visitedNodeOrder = []
     startNode.distance = 0
     const unvisitedNodes = getAllNodes(grid)
-    while (unvisitedNodes.length !== 0) {
-        sortUnvistedNodesByDistance(unvisitedNodes)
-        const closestNode = unvisitedNodes.shift()
+
+    const heap = new MinHeap(unvisitedNodes)
+    
+    //console.log('min '+JSON.stringify(heap.getMin()))
+
+    while (/*unvisitedNodes.length !== 0*/!heap.isEmpty()) {
+        //sortUnvistedNodesByDistance(unvisitedNodes)
+        //const closestNode = unvisitedNodes.shift()
+        
+        const closestNode = heap.extractMin()
+        console.log(closestNode)
         closestNode.isVisited = true;
         //If the node is wall then ignore it
         if(closestNode.isWall) continue
