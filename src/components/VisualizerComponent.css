@@ -1,0 +1,12 @@
+.grid {
+    display: flex;
+    justify-content: center;
+}
+
+.tr-height{
+    line-height: 13px;
+}
+
+/*.visited-node {
+    background: green;
+}*/

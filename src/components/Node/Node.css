@@ -1,0 +1,104 @@
+.node {
+    width: 20px;
+    height: 20px;
+    outline: 1px solid green;
+    display: inline-block;
+}
+
+.start-node {
+    border-radius: 100%;
+    background-color: blue;
+}
+
+.finish-node {
+    background-color: red;
+    border-radius: 100%;
+}
+
+.visited-node {
+    background-color: greenyellow;
+    animation-name: visitedAnimation;
+    animation-duration: 1.5s;
+    
+}
+
+@keyframes visitedAnimation{
+    0% {
+        transform: scale(0.5);
+        background-color: green;
+        border-radius: 100%;
+        outline: 0px;
+    }
+    
+    50% {
+        background-color: chartreuse;    
+        outline: 0px;
+    }
+
+    75% {
+        transform: scale(1.2);
+        background-color: yellow;
+        outline: 0px;
+    }
+
+    100% {
+        transform: scale(1);
+        background-color: greenyellow;
+    }
+
+}
+
+.wall-node {
+    background: black;
+    animation-name: wallAnimation;
+    animation-duration: 0.3s;
+    animation-timing-function: ease-out;
+    outline: 1px solid black;
+}
+
+@keyframes wallAnimation{
+    0% {
+        transform: scale(0.3);
+        background-color: gray;
+    }
+
+    75% {
+        transform: scale(1.2);
+        background-color: gray;
+    }
+
+    100% {
+        transform: scale(1);
+        background-color: black;
+    }
+}
+
+.path-node{
+    background: skyblue;
+    animation-name: pathAnimation;
+    animation-duration: 1.5s;
+    outline: 1px solid skyblue;
+    
+}
+
+@keyframes pathAnimation{
+    0% {
+        transform: scale(0.3);
+        background-color: purple;
+        border-radius: 100%;
+        outline: 1px solid skyblue;
+        
+    }
+
+    75% {
+        transform: scale(1.2);
+        background-color: plum;
+        outline: 1px solid skyblue;
+    }
+
+    100% {
+        transform: scale(1);
+        background-color: skyblue;
+        outline: 1px solid skyblue;
+    }
+}
