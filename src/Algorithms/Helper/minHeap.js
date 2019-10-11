@@ -2,7 +2,7 @@ export class MinHeap {
     
         constructor(elements) {
            this.heapNode = [];
-           console.log(this.heapNode)
+           //console.log(this.heapNode)
            for(let element of elements){
                
                this.insert(element)
@@ -78,8 +78,8 @@ export class MinHeap {
                    smallerChildIndex = this.getRightChildIndex(index)
                }
 
-               let currentData =Object.assign(this.heapNode[index])
-               let smallestChildData = Object.assign(this.heapNode[smallerChildIndex])
+               let currentData = (this.heapNode[index])
+               let smallestChildData = (this.heapNode[smallerChildIndex])
 
                if(currentData.distance < smallestChildData.distance){
                     break;

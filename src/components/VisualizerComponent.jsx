@@ -10,7 +10,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 
 const START_POS_ROW = 10
 const START_POS_COL = 5
-const FINISH_POS_ROW = 19
+const FINISH_POS_ROW = 10
 const FINISH_POS_COL = 45
 
 export class VisualizerComponent extends Component {
@@ -147,7 +147,6 @@ export class VisualizerComponent extends Component {
           setTimeout(() => {
             this.printShortestPath(DFSPath)
           }, i * 30)
-          break
         }
         setTimeout(() => {
           const node = visitedNodeInOrder[i]
@@ -173,7 +172,6 @@ export class VisualizerComponent extends Component {
           setTimeout(() => {
             this.printShortestPath(DFSPath)
           }, i * 30)
-          break
         }
         setTimeout(() => {
           const node = visitedNodeInOrder[i]
@@ -187,11 +185,25 @@ export class VisualizerComponent extends Component {
       const grid = this.state.grid
       const startNode = grid[START_POS_ROW][START_POS_COL]
       const finishNode = grid[FINISH_POS_ROW][FINISH_POS_COL]
-      //console.log(grid)
+      console.log(grid)
       const visitedNodeInOrder = breadthFristSearch(grid, startNode, finishNode)
       //console.log(visitedNodeInOrder)
       const BFSPath = getBFSPath(finishNode)
       this.animateBreadthFirstSearch(visitedNodeInOrder, BFSPath)
+    }
+
+    animateBestFirstSearch = (visitedNodeInOrder, GBFSPath) => {
+      for(let i = 0; i < visitedNodeInOrder.length; i++){
+        if(i === visitedNodeInOrder.length - 1){
+          setTimeout(() => {
+            this.printShortestPath(GBFSPath)
+          }, i * 30)
+        }
+        setTimeout(() => {
+          const node = visitedNodeInOrder[i]
+          this.nodeRef[node.row][node.col].current.toggleVisited()
+        }, i * 30)
+      }
     }
 
     visualizeBestFirstSearch = () => {
@@ -201,8 +213,9 @@ export class VisualizerComponent extends Component {
       //console.log(grid)
       const visitedNodeInOrder = bestFirstSearch(grid, startNode, finishNode)
       console.log(visitedNodeInOrder)
-      const BFSPath = getGBFSPath(finishNode)
-      this.animateBreadthFirstSearch(visitedNodeInOrder, BFSPath)
+      const GBFSPath = getGBFSPath(finishNode)
+      //console.log(GBFSPath)
+      this.animateBestFirstSearch(visitedNodeInOrder, GBFSPath)
     }
 
     
