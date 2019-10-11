@@ -18,7 +18,6 @@ export class MinHeap {
          };
 
          getParentIndex = childIndex => {
-           // if(childIndex === 0) return - 1
            return Math.floor((childIndex - 1) / 2);
          };
 
@@ -52,7 +51,6 @@ export class MinHeap {
                return this.heapNode.shift();
            }
            if (this.heapNode.length !== 0) {
-             //console.log(this.heapNode.slice())
              const minValue = this.heapNode.shift();
              const lastValue = this.heapNode.pop();
              this.heapNode.unshift(lastValue);
@@ -69,8 +67,6 @@ export class MinHeap {
 
          insert = node => {
            this.heapNode.push(node);
-          // console.log(this.heapNode)
-           //console.log(node)
            this.heapifyUp();
          };
 
@@ -99,15 +95,8 @@ export class MinHeap {
            let currentIndex = this.heapNode.length - 1;
            while (this.hasParent(currentIndex)) {
              let parentIndex = this.getParentIndex(currentIndex);
-             //let parent = Object.assign(this.getParentData(currentIndex));
-             //let current = Object.assign(this.heapNode[currentIndex]);
-             
-             //console.log('parent= '+parentIndex +" child= "+ currentIndex)
-
              let parent = (this.heapNode[parentIndex]);
              let current = (this.heapNode[currentIndex]);
-             //console.log('parentI= '+parentIndex +" childI= "+ currentIndex)
-             //console.log('parent= '+(parent) +" child= "+(current))
              if (current.distance < parent.distance) {
                this.heapNode[parentIndex] = current;
                this.heapNode[currentIndex] = parent;

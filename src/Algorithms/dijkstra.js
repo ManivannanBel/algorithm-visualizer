@@ -7,66 +7,13 @@ export function dijkstra(grid, startNode, finishNode) {
 
     const visitedNodeOrder = []
     startNode.distance = 0
-    const unvisitedNodes = getAllNodes(grid)
+    //const unvisitedNodes = getAllNodes(grid)
 
-    const n = [{
-        a : '1',
-        distance : 1
-
-    },{
-        a : '4',
-        distance : 4
-
-    },{
-        a : '6',
-        distance : 6
-
-    },{
-        a : '89',
-        distance : 89
-
-    },{
-        a : '34',
-        distance : 34
-
-    },{
-        a : '5',
-        distance : 5
-
-    },{
-        a : '7',
-        distance : 7
-
-    }]
-
-    /*const heap = new MinHeap([n[0]])
-    heap.insert(n[1])
-    heap.insert(n[2])
-    heap.insert(n[3])
-    heap.insert(n[4])
-    heap.insert(n[5])
-    
-    //console.log('lchild of 5 =' + heap.getLeftChildData(2).distance)
-    //console.log('rchild of 5 =' + heap.hasRightChild(2))
-
-    console.log(heap.extractMin())
-    console.log(heap.extractMin())
-    console.log(heap.extractMin()) 
-    console.log(heap.extractMin())
-    console.log(heap.extractMin())
-    console.log(heap.extractMin())*/
-
-    //console.log(heap.extractMin())
-    //console.log('min '+JSON.stringify(heap.getMin()))
-    
     heap.insert(startNode)
     
     while (!heap.isEmpty()) {
         const closestNode = heap.extractMin()
-        //console.log(closestNode)
-        
         if(closestNode.isVisited) continue
-
         closestNode.isVisited = true;
         //If the node is wall then ignore it
         if(closestNode.isWall) continue
@@ -109,9 +56,9 @@ export function dijkstra(grid, startNode, finishNode) {
     }*/
 }
 
-function sortUnvistedNodesByDistance(unvisitedNodes){
+/*function sortUnvistedNodesByDistance(unvisitedNodes){
     unvisitedNodes.sort((nodeA, nodeB) => nodeA.distance - nodeB.distance)
-}
+}*/
 
 function updateUnvisitedNeighbours(node, grid){
     const unvisitedNeighbours = getUnvisitedNeighbours(node, grid)
@@ -135,7 +82,7 @@ function getUnvisitedNeighbours(node, grid){
     return neighbours*/
 }
 
-function getAllNodes(grid){
+/*function getAllNodes(grid){
     const nodes = []
     for(let row of grid){
         for(let node of row){
@@ -143,7 +90,7 @@ function getAllNodes(grid){
         }
     }
     return nodes
-}
+}*/
 
 export function getShortestPath(finishNode){
     const shortestPath = []
