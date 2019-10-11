@@ -2,14 +2,15 @@ import React, { Component } from 'react'
 import Node from './Node/Node'
 import {dijkstra, getShortestPath} from '../Algorithms/dijkstra'
 import {depthFirstSearch, getDFSPath} from '../Algorithms/depthFirstSearch'
+import {breadthFristSearch, getBFSPath} from '../Algorithms/breadthFirstSearch'
 
 import './VisualizerComponent.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 const START_POS_ROW = 10
 const START_POS_COL = 5
-const FINISH_POS_ROW = 10
-const FINISH_POS_COL = 49
+const FINISH_POS_ROW = 0
+const FINISH_POS_COL = 0
 
 export class VisualizerComponent extends Component {
 
@@ -160,8 +161,34 @@ export class VisualizerComponent extends Component {
         //console.log(JSON.stringify(startNode)+" "+JSON.stringify(finishNode))
         const visitedNodeInOrder = depthFirstSearch(grid, startNode, finishNode)
         const DFSPath = getDFSPath(finishNode)
-        this.animateDepthFirstSearch(visitedNodeInOrder, DFSPath)
-        
+        this.animateDepthFirstSearch(visitedNodeInOrder, DFSPath)   
+    }
+
+    animateBreadthFirstSearch = (visitedNodeInOrder, DFSPath) => {
+      for(let i = 0; i < visitedNodeInOrder.length; i++){
+        if(i === visitedNodeInOrder.length - 1){
+          setTimeout(() => {
+            this.printShortestPath(DFSPath)
+          }, i * 30)
+          break
+        }
+        setTimeout(() => {
+          const node = visitedNodeInOrder[i]
+          this.nodeRef[node.row][node.col].current.toggleVisited()
+        }, i * 30)
+      }
+    }
+
+
+    visualizeBreadthFirstSearch = () => {
+      const grid = this.state.grid
+      const startNode = grid[START_POS_ROW][START_POS_COL]
+      const finishNode = grid[FINISH_POS_ROW][FINISH_POS_COL]
+      //console.log(grid)
+      const visitedNodeInOrder = breadthFristSearch(grid, startNode, finishNode)
+      //console.log(visitedNodeInOrder)
+      const BFSPath = getBFSPath(finishNode)
+      this.animateBreadthFirstSearch(visitedNodeInOrder, BFSPath)
     }
 
     
@@ -176,6 +203,9 @@ export class VisualizerComponent extends Component {
             </button>
             <button onClick={() => this.visualizeDepthFirstSearch()}>
               Visualize Depth Fisrt Search
+            </button>
+            <button onClick={() => this.visualizeBreadthFirstSearch()}>
+              Visualize Breadth Fisrt Search
             </button>
             <div className="grid">
               <table>

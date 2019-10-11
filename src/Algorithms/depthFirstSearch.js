@@ -20,6 +20,8 @@ export function depthFirstSearch(grid, startNode, finishNode){
             stack.push(neighbour)
         }
     }
+
+    //If target not found
     return visitedNodes
 }
 
