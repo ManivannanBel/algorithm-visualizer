@@ -3,6 +3,7 @@ import Node from './Node/Node'
 import {dijkstra, getShortestPath} from '../Algorithms/dijkstra'
 import {depthFirstSearch, getDFSPath} from '../Algorithms/depthFirstSearch'
 import {breadthFristSearch, getBFSPath} from '../Algorithms/breadthFirstSearch'
+import {bestFirstSearch, getGBFSPath} from '../Algorithms/bestFirstSearch'
 
 import './VisualizerComponent.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -191,6 +192,17 @@ export class VisualizerComponent extends Component {
       this.animateBreadthFirstSearch(visitedNodeInOrder, BFSPath)
     }
 
+    visualizeBestFirstSearch = () => {
+      const grid = this.state.grid
+      const startNode = grid[START_POS_ROW][START_POS_COL]
+      const finishNode = grid[FINISH_POS_ROW][FINISH_POS_COL]
+      //console.log(grid)
+      const visitedNodeInOrder = bestFirstSearch(grid, startNode, finishNode)
+      console.log(visitedNodeInOrder)
+      const BFSPath = getGBFSPath(finishNode)
+      this.animateBreadthFirstSearch(visitedNodeInOrder, BFSPath)
+    }
+
     
     render() {
         const grid = this.state.grid
@@ -206,6 +218,9 @@ export class VisualizerComponent extends Component {
             </button>
             <button onClick={() => this.visualizeBreadthFirstSearch()}>
               Visualize Breadth Fisrt Search
+            </button>
+            <button onClick={() => this.visualizeBestFirstSearch()}>
+              Visualize Best Fisrt Search
             </button>
             <div className="grid">
               <table>
