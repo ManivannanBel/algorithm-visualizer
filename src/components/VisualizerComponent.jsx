@@ -22,7 +22,7 @@ export class VisualizerComponent extends Component {
              grid : [],
              mousePressed : false
         }
-
+        
         //Refs for all the nodes
         this.nodeRef = []
     }
@@ -89,6 +89,7 @@ export class VisualizerComponent extends Component {
             grid.push(columnRow)
         }
         this.setState({grid : grid})
+        //console.log(grid)
     }
 
     createNode = (row, col) => {
@@ -98,6 +99,7 @@ export class VisualizerComponent extends Component {
         isStart : row === START_POS_ROW && col === START_POS_COL,
         isFinish : row ===  FINISH_POS_ROW && col === FINISH_POS_COL,
         distance : Infinity,
+        //distanceFromTarget : (Math.abs(row - FINISH_POS_ROW) + Math.abs(col - FINISH_POS_COL)),
         previousNode : null ,
         isVisited : false,
         isWall : false,

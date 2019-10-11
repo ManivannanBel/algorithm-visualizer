@@ -5,6 +5,9 @@ export function bestFirstSearch(grid, startNode, finishNode){
     if(!startNode || !finishNode || startNode === finishNode)
         return false
     
+    UpdateDistance(grid, finishNode)
+    console.log(grid)
+
     const visitedNodesInOrder = []
     startNode.distance = 0
     const minHeap = new MinHeap([])
@@ -24,7 +27,7 @@ export function bestFirstSearch(grid, startNode, finishNode){
 function updateNeighbours(grid, node, minHeap){
     const unvisitedNeighbours = getUnvisitedNeighbours(grid, node)
     for(let neighbour of unvisitedNeighbours){
-        neighbour.distance = node.distance + 1
+        //neighbour.distance = node.distance + 1
         neighbour.previousNode = node
         minHeap.insert(neighbour)
     }
@@ -40,6 +43,21 @@ function getUnvisitedNeighbours(grid, node){
     if(col < grid.length - 1) neighbours.push(grid[row][col + 1])
 
     return neighbours.filter(neighbour => !neighbour.isVisited)
+}
+
+function UpdateDistance (grid, finishNode){
+    const {row, col} = finishNode
+    for(let gridRow of grid){
+        for(let node of gridRow){
+            if(node.isFinish) continue
+            const distanceFromTarget = Math.abs(node.row - row) + Math.abs(node.col - col)
+            const newNode = {
+                ...node,
+                distance : distanceFromTarget
+            }
+            grid[node.row][node.col] = newNode
+        }
+    }
 }
 
 export function getGBFSPath(finishNode){
