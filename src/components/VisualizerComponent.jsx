@@ -7,7 +7,6 @@ import {bestFirstSearch, getGBFSPath} from '../Algorithms/bestFirstSearch'
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
 import NavDropdown from 'react-bootstrap/NavDropdown'
-import Container from 'react-bootstrap/Container'
 
 import './VisualizerComponent.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -24,7 +23,8 @@ export class VisualizerComponent extends Component {
     
         this.state = {
              grid : [],
-             mousePressed : false
+             mousePressed : false,
+             mousePointerEvents : 'auto'
         }
         
         //Refs for all the nodes
@@ -32,6 +32,7 @@ export class VisualizerComponent extends Component {
     }
 
       handleMouseDown = (row, col) => {
+        //if(this.state.algorithmRunning) return
         if(!this.state.grid[row][col].isWall){
           const newGrid = this.buildWall(row, col)
           this.setState({grid : newGrid, mousePressed : true})
@@ -42,6 +43,7 @@ export class VisualizerComponent extends Component {
       }
 
       handleMouseEnter = (row, col) => {
+        //if(this.state.algorithmRunning) return
         if(this.state.mousePressed){
           if(!this.state.grid[row][col].isWall){
             const newGrid = this.buildWall(row, col)
@@ -187,11 +189,12 @@ export class VisualizerComponent extends Component {
     }
 
     animateDijkstra = (visitedNodeInOrder, shortestPath) => {
-        
+        const grid = this.state.grid
         for(let i = 0; i < visitedNodeInOrder.length; i++){
+            grid[visitedNodeInOrder[i].row][visitedNodeInOrder[i].col] = visitedNodeInOrder[i]
             if(i === visitedNodeInOrder.length - 1){
               setTimeout(() => {
-                this.printShortestPath(shortestPath)
+                this.printShortestPath(shortestPath, grid)
               }, 10 * i)
             }
             setTimeout(() => {
@@ -201,16 +204,27 @@ export class VisualizerComponent extends Component {
         }
     }
 
-    printShortestPath = (shortestPath) => {
+    printShortestPath = (shortestPath, grid) => {
       for(let i = 0; i < shortestPath.length; i++){
         setTimeout(() => {
           const node = shortestPath[i]
+          grid[node.row][node.col] = node
           this.nodeRef[node.row][node.col].current.togglePath();
+          if(i == shortestPath.length - 1){
+            this.setState({grid : grid})
+            setTimeout(() => {
+              this.setState({mousePointerEvents : 'auto'})
+            }, 30 * i+1);
+          }
         }, 30 * i)
       }
+      //console.log(this.state.algorithmRunning)
     }
 
     visualizeDijkstra = () => {
+      //console.log(this.state.algorithmRunning)
+      this.setState({mousePointerEvents : 'none'})
+      //console.log(this.state.algorithmRunning)
       this.clearVisitedNode(false)
 
       setTimeout(() => {
@@ -239,6 +253,7 @@ export class VisualizerComponent extends Component {
     }
 
     visualizeDepthFirstSearch = () => {
+        this.setState({mousePointerEvents : 'none'})
         this.clearVisitedNode(false)
 
         setTimeout(()=>{
@@ -271,6 +286,7 @@ export class VisualizerComponent extends Component {
 
 
     visualizeBreadthFirstSearch = () => {
+      this.setState({mousePointerEvents : 'none'})
       this.clearVisitedNode(false)
 
       setTimeout(() => {
@@ -301,6 +317,7 @@ export class VisualizerComponent extends Component {
     }
 
     visualizeBestFirstSearch = () => {
+      this.setState({mousePointerEvents : 'none'})
       this.clearVisitedNode(false)
       setTimeout(() => {
         const {grid} = this.state
@@ -321,21 +338,24 @@ export class VisualizerComponent extends Component {
         const grid = this.state.grid
         //console.log(grid)
         //Building the grid with table and table data as Node component
+
+        
+
         return (
           <div className='container-fluid'>
             <div>
-            <Navbar bg="light" expand="lg">
-            <Navbar.Brand href="#home">Algorithm Visualizer</Navbar.Brand>
-            <NavDropdown title="Select Algorithm" id="basic-nav-dropdown">
-            <NavDropdown.Item href="#action/3.1" onClick={() => this.visualizeDijkstra()}>Visualize Dijkstra</NavDropdown.Item>
-            <NavDropdown.Item href="#action/3.2" onClick={() => this.visualizeDijkstra()}>Visualize Depth Fisrt Search</NavDropdown.Item>
-            <NavDropdown.Item href="#action/3.3" onClick={() => this.visualizeBreadthFirstSearch()}>Visualize Breadth Fisrt Search</NavDropdown.Item>
-            <NavDropdown.Item href="#action/3.3" onClick={() => this.visualizeBestFirstSearch()}>Visualize Best Fisrt Search</NavDropdown.Item>
+            <Navbar bg="light">
+            <Navbar.Brand href="#">Algorithm Visualizer</Navbar.Brand>
+            <NavDropdown title="Select Algorithm" id="basic-nav-dropdown" style={{ pointerEvents : this.state.mousePointerEvents }}>
+            <NavDropdown.Item href="" onClick={() => this.visualizeDijkstra()}>Visualize Dijkstra</NavDropdown.Item>
+            <NavDropdown.Item href="" onClick={() => this.visualizeDepthFirstSearch()}>Visualize Depth Fisrt Search</NavDropdown.Item>
+            <NavDropdown.Item href="" onClick={() => this.visualizeBreadthFirstSearch()}>Visualize Breadth Fisrt Search</NavDropdown.Item>
+            <NavDropdown.Item href="" onClick={() => this.visualizeBestFirstSearch()}>Visualize Best Fisrt Search</NavDropdown.Item>
             </NavDropdown>
-            <Nav.Link onClick={() => this.clearVisitedNode(true)}>clear board</Nav.Link>
+            <Nav.Link onClick={() => this.clearVisitedNode(true)} style={{ pointerEvents : this.state.mousePointerEvents }}>clear board</Nav.Link>
             </Navbar>
             </div>
-            <div className="grid">
+            <div className="grid" style={{ pointerEvents : this.state.mousePointerEvents }}>
               <table>
                 <tbody>
                   {grid.map((row, rowId) => {
