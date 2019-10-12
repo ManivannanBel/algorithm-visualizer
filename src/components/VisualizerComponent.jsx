@@ -4,6 +4,9 @@ import {dijkstra, getShortestPath} from '../Algorithms/dijkstra'
 import {depthFirstSearch, getDFSPath} from '../Algorithms/depthFirstSearch'
 import {breadthFristSearch, getBFSPath} from '../Algorithms/breadthFirstSearch'
 import {bestFirstSearch, getGBFSPath} from '../Algorithms/bestFirstSearch'
+import Nav from 'react-bootstrap/Nav'
+import Navbar from 'react-bootstrap/Navbar'
+import NavDropdown from 'react-bootstrap/NavDropdown'
 
 import './VisualizerComponent.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -319,27 +322,16 @@ export class VisualizerComponent extends Component {
         //Building the grid with table and table data as Node component
         return (
           <div>
-            <nav className="navbar navbar-expand-lg navbar-light bg-light">
-            <a className="navbar-brand" href="#">Algorithm Visualizer</a>
-            <ul className="nav navbar-nav">
-            <li className="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Select Algorithm
-            </a>
-              <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <a className="dropdown-item" href="#" onClick={() => this.visualizeDijkstra()}>Visualize Dijkstra</a>
-                <a className="dropdown-item" href="#" onClick={() => this.visualizeDepthFirstSearch()}>Visualize Depth Fisrt Search</a>
-                <a className="dropdown-item" href="#" onClick={() => this.visualizeBreadthFirstSearch()}>Visualize Breadth Fisrt Search</a>
-                <a className="dropdown-item" href="#" onClick={() => this.visualizeBestFirstSearch()}>Visualize Best Fisrt Search</a>
-              </div>
-            </li>
-            <li className="nav-item"><a class="nav-link" onClick={() => this.clearVisitedNode(true)}>clear board</a></li>
-            </ul>
-            </nav>
-            <a className="dropdown-item" href="#" onClick={() => this.visualizeDijkstra()}>Visualize Dijkstra</a>
-                <a className="dropdown-item" href="#" onClick={() => this.visualizeDepthFirstSearch()}>Visualize Depth Fisrt Search</a>
-                <a className="dropdown-item" href="#" onClick={() => this.visualizeBreadthFirstSearch()}>Visualize Breadth Fisrt Search</a>
-                <a className="dropdown-item" href="#" onClick={() => this.visualizeBestFirstSearch()}>Visualize Best Fisrt Search</a>
+            <Navbar bg="light" expand="lg">
+            <Navbar.Brand href="#home">Algorithm Visualizer</Navbar.Brand>
+            <NavDropdown title="Select Algorithm" id="basic-nav-dropdown">
+            <NavDropdown.Item href="#action/3.1" onClick={() => this.visualizeDijkstra()}>Visualize Dijkstra</NavDropdown.Item>
+            <NavDropdown.Item href="#action/3.2" onClick={() => this.visualizeDijkstra()}>Visualize Depth Fisrt Search</NavDropdown.Item>
+            <NavDropdown.Item href="#action/3.3" onClick={() => this.visualizeBreadthFirstSearch()}>Visualize Breadth Fisrt Search</NavDropdown.Item>
+            <NavDropdown.Item href="#action/3.3" onClick={() => this.visualizeBestFirstSearch()}>Visualize Best Fisrt Search</NavDropdown.Item>
+            </NavDropdown>
+            <Nav.Link onClick={() => this.clearVisitedNode(true)}>clear board</Nav.Link>
+            </Navbar>
             <div className="grid">
               <table>
                 <tbody>
