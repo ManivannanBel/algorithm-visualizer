@@ -55,7 +55,6 @@ function updateNeighbours(grid, node, minHeap){
     for(let neighbour of unvisitedNeighbours){
         //neighbour.distance = node.distance + 1
         neighbour.previousNode = node
-        
         minHeap.insert(neighbour)
     }
 }
