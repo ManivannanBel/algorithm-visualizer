@@ -1,7 +1,7 @@
 .grid {
-    display: flex;
     position: absolute;
-    justify-content: center;
+    left: 50%;
+    transform: translate(-50%, 0);
 }
 
 .tr-height{
