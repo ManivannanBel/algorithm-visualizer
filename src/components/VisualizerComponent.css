@@ -1,5 +1,6 @@
 .grid {
     display: flex;
+    position: absolute;
     justify-content: center;
 }
 

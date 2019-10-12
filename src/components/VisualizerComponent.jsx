@@ -7,6 +7,7 @@ import {bestFirstSearch, getGBFSPath} from '../Algorithms/bestFirstSearch'
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
 import NavDropdown from 'react-bootstrap/NavDropdown'
+import Container from 'react-bootstrap/Container'
 
 import './VisualizerComponent.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -321,7 +322,8 @@ export class VisualizerComponent extends Component {
         //console.log(grid)
         //Building the grid with table and table data as Node component
         return (
-          <div>
+          <div className='container-fluid'>
+            <div>
             <Navbar bg="light" expand="lg">
             <Navbar.Brand href="#home">Algorithm Visualizer</Navbar.Brand>
             <NavDropdown title="Select Algorithm" id="basic-nav-dropdown">
@@ -332,6 +334,7 @@ export class VisualizerComponent extends Component {
             </NavDropdown>
             <Nav.Link onClick={() => this.clearVisitedNode(true)}>clear board</Nav.Link>
             </Navbar>
+            </div>
             <div className="grid">
               <table>
                 <tbody>
