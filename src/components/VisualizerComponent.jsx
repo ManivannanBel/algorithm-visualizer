@@ -321,19 +321,19 @@ export class VisualizerComponent extends Component {
           <div>
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <a className="navbar-brand" href="#">Algorithm Visualizer</a>
-            <ul className="navbar-nav">
+            <ul className="nav navbar-nav">
             <li className="nav-item dropdown">
-              <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Select Algorithm
-              </a>
-              <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Select Algorithm
+            </a>
+              <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                 <a className="dropdown-item" href="#" onClick={() => this.visualizeDijkstra()}>Visualize Dijkstra</a>
                 <a className="dropdown-item" href="#" onClick={() => this.visualizeDepthFirstSearch()}>Visualize Depth Fisrt Search</a>
                 <a className="dropdown-item" href="#" onClick={() => this.visualizeBreadthFirstSearch()}>Visualize Breadth Fisrt Search</a>
                 <a className="dropdown-item" href="#" onClick={() => this.visualizeBestFirstSearch()}>Visualize Best Fisrt Search</a>
               </div>
             </li>
-            <li className="nav-item" onClick={() => this.clearVisitedNode(true)}>clear board</li>
+            <li className="nav-item"><a class="nav-link" onClick={() => this.clearVisitedNode(true)}>clear board</a></li>
             </ul>
             </nav>
             <a className="dropdown-item" href="#" onClick={() => this.visualizeDijkstra()}>Visualize Dijkstra</a>
