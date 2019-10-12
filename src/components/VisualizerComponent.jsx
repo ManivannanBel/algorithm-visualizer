@@ -108,6 +108,80 @@ export class VisualizerComponent extends Component {
         return newNode
     }
 
+    clearVisitedNode = (removeWall) => {
+      const newGrid = this.state.grid
+      for(const row of newGrid){
+        for(const node of row){
+          const {row, col} = node
+          if(node.isStart){
+            this.resetStartNode(row, col, newGrid, node)  
+          }else if(node.isFinish){
+            this.resetFinishNode(row, col, newGrid, node)
+          }else if(node.isWall){
+            this.resetWallNode(row, col, newGrid, node, removeWall)
+          }else{
+            this.resetVisitedNode(row, col, newGrid, node)            
+          } 
+        }
+      }
+      this.setState({grid : newGrid})
+      console.log(this.state.grid)
+    }
+
+    resetStartNode = (row, col, grid, node) => {
+      const newNode = {
+        ...node,
+        isPath: false,
+        isVisited: false,
+        previousNode: null,
+        distance : Infinity
+      }
+      grid[row][col] = newNode
+      this.nodeRef[node.row][node.col].current.toggleStart();
+    }
+
+    resetFinishNode = (row, col, grid, node) => {
+      const newNode = {
+        ...node,
+        isPath: false,
+        isVisited: false,
+        previousNode: null,
+        distance : Infinity
+      }
+      grid[row][col] = newNode
+      this.nodeRef[node.row][node.col].current.toggleFinish();
+    }
+
+    resetWallNode = (row, col, grid, node, removeWall) => {
+      if(removeWall){
+        this.resetVisitedNode(row, col, grid, node)
+      }else{
+        const newNode = {
+          ...node,
+          isPath: false,
+          isVisited: false,
+          previousNode: null,
+          isWall : true,
+          distance : Infinity
+        }
+        grid[row][col] = newNode
+      }
+    }
+
+    resetVisitedNode = (row, col, grid, node) => {
+      const newNode = {
+        ...node,
+        isPath: false,
+        isVisited: false,
+        previousNode: null,
+        isWall : false,
+        distance : Infinity
+      }
+
+      grid[row][col] = newNode
+      this.nodeRef[node.row][node.col].current.toggleReset();
+    }
+
     animateDijkstra = (visitedNodeInOrder, shortestPath) => {
         
         for(let i = 0; i < visitedNodeInOrder.length; i++){
@@ -133,12 +207,17 @@ export class VisualizerComponent extends Component {
     }
 
     visualizeDijkstra = () => {
+      this.clearVisitedNode(false)
+
+      setTimeout(() => {
         const {grid} = this.state
         const startNode = grid[START_POS_ROW][START_POS_COL]
         const finishNode = grid[FINISH_POS_ROW][FINISH_POS_COL]
         const visitedNodeInOrder = dijkstra(grid.slice(), startNode, finishNode)
         const shortestPath = getShortestPath(finishNode)
         this.animateDijkstra(visitedNodeInOrder, shortestPath)
+      }, 500);
+        
     }
 
     animateDepthFirstSearch = (visitedNodeInOrder, DFSPath) => {
@@ -156,14 +235,20 @@ export class VisualizerComponent extends Component {
     }
 
     visualizeDepthFirstSearch = () => {
-        const grid = this.state.grid
-        //console.log(grid)
-        const startNode = grid[START_POS_ROW][START_POS_COL]
-        const finishNode = grid[FINISH_POS_ROW][FINISH_POS_COL]
-        //console.log(JSON.stringify(startNode)+" "+JSON.stringify(finishNode))
-        const visitedNodeInOrder = depthFirstSearch(grid, startNode, finishNode)
-        const DFSPath = getDFSPath(finishNode)
-        this.animateDepthFirstSearch(visitedNodeInOrder, DFSPath)   
+        this.clearVisitedNode(false)
+
+        setTimeout(()=>{
+          const {grid} = this.state
+          //console.log(grid)
+          const startNode = grid[START_POS_ROW][START_POS_COL]
+          const finishNode = grid[FINISH_POS_ROW][FINISH_POS_COL]
+          //console.log(JSON.stringify(startNode)+" "+JSON.stringify(finishNode))
+          const visitedNodeInOrder = depthFirstSearch(grid.slice(), startNode, finishNode)
+          const DFSPath = getDFSPath(finishNode)
+          this.animateDepthFirstSearch(visitedNodeInOrder, DFSPath)  
+        },500)
+
+         
     }
 
     animateBreadthFirstSearch = (visitedNodeInOrder, DFSPath) => {
@@ -182,14 +267,19 @@ export class VisualizerComponent extends Component {
 
 
     visualizeBreadthFirstSearch = () => {
-      const grid = this.state.grid
-      const startNode = grid[START_POS_ROW][START_POS_COL]
-      const finishNode = grid[FINISH_POS_ROW][FINISH_POS_COL]
-      console.log(grid)
-      const visitedNodeInOrder = breadthFristSearch(grid, startNode, finishNode)
-      //console.log(visitedNodeInOrder)
-      const BFSPath = getBFSPath(finishNode)
-      this.animateBreadthFirstSearch(visitedNodeInOrder, BFSPath)
+      this.clearVisitedNode(false)
+
+      setTimeout(() => {
+        const {grid} = this.state
+        const startNode = grid[START_POS_ROW][START_POS_COL]
+        const finishNode = grid[FINISH_POS_ROW][FINISH_POS_COL]
+        console.log(grid)
+        const visitedNodeInOrder = breadthFristSearch(grid.slice(), startNode, finishNode)
+        //console.log(visitedNodeInOrder)
+        const BFSPath = getBFSPath(finishNode)
+        this.animateBreadthFirstSearch(visitedNodeInOrder, BFSPath)
+      }, 500)
+      
     }
 
     animateBestFirstSearch = (visitedNodeInOrder, GBFSPath) => {
@@ -207,36 +297,49 @@ export class VisualizerComponent extends Component {
     }
 
     visualizeBestFirstSearch = () => {
-      const grid = this.state.grid
-      const startNode = grid[START_POS_ROW][START_POS_COL]
-      const finishNode = grid[FINISH_POS_ROW][FINISH_POS_COL]
-      //console.log(grid)
-      const visitedNodeInOrder = bestFirstSearch(grid, startNode, finishNode)
-      console.log(visitedNodeInOrder)
-      const GBFSPath = getGBFSPath(finishNode)
-      //console.log(GBFSPath)
-      this.animateBestFirstSearch(visitedNodeInOrder, GBFSPath)
+      this.clearVisitedNode(false)
+      setTimeout(() => {
+        const {grid} = this.state
+        const startNode = grid[START_POS_ROW][START_POS_COL]
+        const finishNode = grid[FINISH_POS_ROW][FINISH_POS_COL]
+        //console.log(grid)
+        const visitedNodeInOrder = bestFirstSearch(grid.slice(), startNode, finishNode)
+        //console.log(visitedNodeInOrder)
+        const GBFSPath = getGBFSPath(finishNode)
+        //console.log(GBFSPath)
+        this.animateBestFirstSearch(visitedNodeInOrder, GBFSPath)
+      }, 500)
+        
     }
 
     
     render() {
         const grid = this.state.grid
-
+        //console.log(grid)
         //Building the grid with table and table data as Node component
         return (
           <div>
-            <button onClick={() => this.visualizeDijkstra()}>
-              Visualize Dijkstra
-            </button>
-            <button onClick={() => this.visualizeDepthFirstSearch()}>
-              Visualize Depth Fisrt Search
-            </button>
-            <button onClick={() => this.visualizeBreadthFirstSearch()}>
-              Visualize Breadth Fisrt Search
-            </button>
-            <button onClick={() => this.visualizeBestFirstSearch()}>
-              Visualize Best Fisrt Search
-            </button>
+            <nav className="navbar navbar-expand-lg navbar-light bg-light">
+            <a className="navbar-brand" href="#">Algorithm Visualizer</a>
+            <ul className="navbar-nav">
+            <li className="nav-item dropdown">
+              <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Select Algorithm
+              </a>
+              <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a className="dropdown-item" href="#" onClick={() => this.visualizeDijkstra()}>Visualize Dijkstra</a>
+                <a className="dropdown-item" href="#" onClick={() => this.visualizeDepthFirstSearch()}>Visualize Depth Fisrt Search</a>
+                <a className="dropdown-item" href="#" onClick={() => this.visualizeBreadthFirstSearch()}>Visualize Breadth Fisrt Search</a>
+                <a className="dropdown-item" href="#" onClick={() => this.visualizeBestFirstSearch()}>Visualize Best Fisrt Search</a>
+              </div>
+            </li>
+            <li className="nav-item" onClick={() => this.clearVisitedNode(true)}>clear board</li>
+            </ul>
+            </nav>
+            <a className="dropdown-item" href="#" onClick={() => this.visualizeDijkstra()}>Visualize Dijkstra</a>
+                <a className="dropdown-item" href="#" onClick={() => this.visualizeDepthFirstSearch()}>Visualize Depth Fisrt Search</a>
+                <a className="dropdown-item" href="#" onClick={() => this.visualizeBreadthFirstSearch()}>Visualize Breadth Fisrt Search</a>
+                <a className="dropdown-item" href="#" onClick={() => this.visualizeBestFirstSearch()}>Visualize Best Fisrt Search</a>
             <div className="grid">
               <table>
                 <tbody>
