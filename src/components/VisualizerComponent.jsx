@@ -33,6 +33,8 @@ export class VisualizerComponent extends Component {
 
       handleMouseDown = (row, col) => {
         //if(this.state.algorithmRunning) return
+        if(this.state.grid[row][col].isStart || this.state.grid[row][col].isFinish)
+          return 
         if(!this.state.grid[row][col].isWall){
           const newGrid = this.buildWall(row, col)
           this.setState({grid : newGrid, mousePressed : true})
@@ -44,6 +46,8 @@ export class VisualizerComponent extends Component {
 
       handleMouseEnter = (row, col) => {
         //if(this.state.algorithmRunning) return
+        if(this.state.grid[row][col].isStart || this.state.grid[row][col].isFinish)
+          return 
         if(this.state.mousePressed){
           if(!this.state.grid[row][col].isWall){
             const newGrid = this.buildWall(row, col)
@@ -208,6 +212,7 @@ export class VisualizerComponent extends Component {
       for(let i = 0; i < shortestPath.length; i++){
         setTimeout(() => {
           const node = shortestPath[i]
+          //console.log(grid[node.row][node.col])
           grid[node.row][node.col] = node
           this.nodeRef[node.row][node.col].current.togglePath();
           if(i == shortestPath.length - 1){
@@ -239,10 +244,12 @@ export class VisualizerComponent extends Component {
     }
 
     animateDepthFirstSearch = (visitedNodeInOrder, DFSPath) => {
+      const grid = this.state.grid
       for(let i = 0; i < visitedNodeInOrder.length; i++){
+        grid[visitedNodeInOrder[i].row][visitedNodeInOrder[i].col] = visitedNodeInOrder[i]
         if(i === visitedNodeInOrder.length - 1){
           setTimeout(() => {
-            this.printShortestPath(DFSPath)
+            this.printShortestPath(DFSPath, grid)
           }, i * 30)
         }
         setTimeout(() => {
@@ -271,10 +278,12 @@ export class VisualizerComponent extends Component {
     }
 
     animateBreadthFirstSearch = (visitedNodeInOrder, DFSPath) => {
+      const grid = this.state.grid
       for(let i = 0; i < visitedNodeInOrder.length; i++){
+        grid[visitedNodeInOrder[i].row][visitedNodeInOrder[i].col] = visitedNodeInOrder[i]
         if(i === visitedNodeInOrder.length - 1){
           setTimeout(() => {
-            this.printShortestPath(DFSPath)
+            this.printShortestPath(DFSPath, grid)
           }, i * 30)
         }
         setTimeout(() => {
@@ -303,10 +312,12 @@ export class VisualizerComponent extends Component {
     }
 
     animateBestFirstSearch = (visitedNodeInOrder, GBFSPath) => {
+      const grid = this.state.grid
       for(let i = 0; i < visitedNodeInOrder.length; i++){
+        grid[visitedNodeInOrder[i].row][visitedNodeInOrder[i].col] = visitedNodeInOrder[i]
         if(i === visitedNodeInOrder.length - 1){
           setTimeout(() => {
-            this.printShortestPath(GBFSPath)
+            this.printShortestPath(GBFSPath, grid)
           }, i * 30)
         }
         setTimeout(() => {

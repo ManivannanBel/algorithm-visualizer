@@ -44,6 +44,7 @@ export function getBFSPath(finishNode){
 
     var currentNode = finishNode
     while(currentNode !== null){
+        currentNode = { ...currentNode, isPath : true}
         BFSPath.unshift(currentNode)
         currentNode = currentNode.previousNode
     }

@@ -105,6 +105,7 @@ export function getGBFSPath(finishNode){
 
     var currentNode = finishNode
     while(currentNode !== null){
+        currentNode = { ...currentNode, isPath : true}
         GBFSPath.unshift(currentNode)
         currentNode = currentNode.previousNode
     }

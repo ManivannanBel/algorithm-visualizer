@@ -58,6 +58,7 @@ export function getDFSPath(finishNode){
 
     var currentNode = finishNode
     while(currentNode !== null){
+        currentNode = { ...currentNode, isPath : true}
         DFSPath.unshift(currentNode)
         currentNode = currentNode.previousNode
     }
