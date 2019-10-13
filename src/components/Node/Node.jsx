@@ -51,7 +51,7 @@ export class Node extends Component {
 
             onMouseDown={() => onMouseDown(row, col)}
             onMouseEnter={() => onMouseEnter(row, col)}
-            onClick={() => onMouseUp()}>
+            onMouseUp={() => onMouseUp()}>
            </div>
         );
     }

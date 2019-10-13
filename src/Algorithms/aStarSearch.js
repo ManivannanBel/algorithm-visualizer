@@ -7,20 +7,39 @@ export function aStarSearch(grid, startNode, finishNode){
     
     const visitedNodes = []
 
-    startNode.distance = 0;
+    
     startNode.generatedDistance = 0;
+    startNode.hurestic = hurestics(startNode, finishNode, 'manhattan_distance')
+    startNode.distance = startNode.hurestic;
     const minHeap = new MinHeap([])
+    const openSet = new Set()
     minHeap.insert(startNode)
+    openSet.add(startNode)
     while(!minHeap.isEmpty()){
         const currentNode = minHeap.extractMin()
-        if(currentNode.distance === Infinity) return visitedNodes
+        openSet.delete(currentNode)
+        //if(currentNode.distance === Infinity) return visitedNodes
         if(currentNode.isWall) continue
         if(currentNode.isVisited) continue
         currentNode.isVisited = true
         visitedNodes.push(currentNode)
         if(currentNode === finishNode)
             return visitedNodes
-        updateNeighbours(grid, currentNode, finishNode, minHeap)
+        //updateNeighbours(grid, currentNode, finishNode, minHeap, openSet)
+        const neighbours = getUnvisitedNeighbours(grid, currentNode)
+        for(const neighbour of neighbours){
+            const tentativeScore = currentNode.generatedDistance + 1
+            if(tentativeScore < neighbour.generatedDistance){
+                neighbour.previousNode = currentNode
+                neighbour.generatedDistance = tentativeScore
+                neighbour.hurestic = hurestics(neighbour, finishNode, 'manhattan_distance')
+                neighbour.distance = neighbour.generatedDistance + neighbour.hurestic
+                if(!openSet.has(neighbour)){
+                    openSet.add(neighbour)
+                    minHeap.insert(neighbour)
+                }
+            }
+        }
     }
     return visitedNodes
 }
@@ -47,15 +66,16 @@ function euclideanDistance(node, targetNode){
     return Math.sqrt(Math.pow((node.row - targetNode.row), 2) + Math.pow((node.col - targetNode.col), 2))
 }
 
-function updateNeighbours(grid, node, targetNode, minHeap){
+function updateNeighbours(grid, node, targetNode, minHeap, openSet){
     const unvisitedNeighbours = getUnvisitedNeighbours(grid, node)
     for(let neighbour of unvisitedNeighbours){
         neighbour.generatedDistance = node.generatedDistance + 1
         neighbour.hurestic = hurestics(neighbour, targetNode, 'manhattan_distance')
         neighbour.distance = (neighbour.generatedDistance + neighbour.hurestic)
         neighbour.previousNode = node
-        //if(!minHeap.isEmpty() && (minHeap.getMin()).distance < neighbour.distance) continue
-        minHeap.insert(neighbour)
+        //if(!minHeap.isEmpty() && (minHeap.getMin()).hurestic < neighbour.hurestic) continue
+        if(!openSet.has(neighbour))
+            minHeap.insert(neighbour)
     }
 }
 

@@ -408,6 +408,7 @@ export class VisualizerComponent extends Component {
       this.clearVisitedNode(false)
       setTimeout(() => {
         const {grid} = this.state
+        console.log(grid)
         const startNode = grid[START_POS_ROW][START_POS_COL]
         const finishNode = grid[FINISH_POS_ROW][FINISH_POS_COL]
         //console.log(grid)
