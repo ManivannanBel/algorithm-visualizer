@@ -4,6 +4,8 @@ import {dijkstra, getShortestPath} from '../Algorithms/dijkstra'
 import {depthFirstSearch, getDFSPath} from '../Algorithms/depthFirstSearch'
 import {breadthFristSearch, getBFSPath} from '../Algorithms/breadthFirstSearch'
 import {bestFirstSearch, getGBFSPath} from '../Algorithms/bestFirstSearch'
+import { aStarSearch } from "../Algorithms/aStarSearch";
+
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
 import NavDropdown from 'react-bootstrap/NavDropdown'
@@ -109,7 +111,8 @@ export class VisualizerComponent extends Component {
         isStart : row === START_POS_ROW && col === START_POS_COL,
         isFinish : row ===  FINISH_POS_ROW && col === FINISH_POS_COL,
         distance : Infinity,
-        //distanceFromTarget : (Math.abs(row - FINISH_POS_ROW) + Math.abs(col - FINISH_POS_COL)),
+        hurestic : Infinity,
+        generatedDistance : Infinity,
         previousNode : null ,
         isVisited : false,
         isWall : false,
@@ -144,7 +147,9 @@ export class VisualizerComponent extends Component {
         isPath: false,
         isVisited: false,
         previousNode: null,
-        distance : Infinity
+        distance : Infinity,
+        generatedDistance : Infinity,
+        hurestic : Infinity
       }
       grid[row][col] = newNode
       this.nodeRef[node.row][node.col].current.toggleStart();
@@ -156,7 +161,9 @@ export class VisualizerComponent extends Component {
         isPath: false,
         isVisited: false,
         previousNode: null,
-        distance : Infinity
+        distance : Infinity,
+        generatedDistance : Infinity,
+        hurestic : Infinity
       }
       grid[row][col] = newNode
       this.nodeRef[node.row][node.col].current.toggleFinish();
@@ -172,7 +179,9 @@ export class VisualizerComponent extends Component {
           isVisited: false,
           previousNode: null,
           isWall : true,
-          distance : Infinity
+          distance : Infinity,
+          generatedDistance : Infinity,
+          hurestic : Infinity
         }
         grid[row][col] = newNode
       }
@@ -185,7 +194,9 @@ export class VisualizerComponent extends Component {
         isVisited: false,
         previousNode: null,
         isWall : false,
-        distance : Infinity
+        distance : Infinity,
+        generatedDistance : Infinity,
+        hurestic : Infinity
       }
 
       grid[row][col] = newNode
@@ -209,13 +220,19 @@ export class VisualizerComponent extends Component {
     }
 
     printShortestPath = (shortestPath, grid) => {
+      if(shortestPath.length === 0){
+        setTimeout(() => {
+          this.setState({mousePointerEvents : 'auto'})
+        }, 30)
+        return
+      }
       for(let i = 0; i < shortestPath.length; i++){
         setTimeout(() => {
           const node = shortestPath[i]
           //console.log(grid[node.row][node.col])
           grid[node.row][node.col] = node
           this.nodeRef[node.row][node.col].current.togglePath();
-          if(i == shortestPath.length - 1){
+          if(i === shortestPath.length - 1){
             this.setState({grid : grid})
             setTimeout(() => {
               this.setState({mousePointerEvents : 'auto'})
@@ -237,6 +254,7 @@ export class VisualizerComponent extends Component {
         const startNode = grid[START_POS_ROW][START_POS_COL]
         const finishNode = grid[FINISH_POS_ROW][FINISH_POS_COL]
         const visitedNodeInOrder = dijkstra(grid.slice(), startNode, finishNode)
+        if(!visitedNodeInOrder) return
         const shortestPath = getShortestPath(finishNode)
         this.animateDijkstra(visitedNodeInOrder, shortestPath)
       }, 500);
@@ -270,6 +288,7 @@ export class VisualizerComponent extends Component {
           const finishNode = grid[FINISH_POS_ROW][FINISH_POS_COL]
           //console.log(JSON.stringify(startNode)+" "+JSON.stringify(finishNode))
           const visitedNodeInOrder = depthFirstSearch(grid.slice(), startNode, finishNode)
+          if(!visitedNodeInOrder) return
           const DFSPath = getDFSPath(finishNode)
           this.animateDepthFirstSearch(visitedNodeInOrder, DFSPath)  
         },500)
@@ -304,6 +323,7 @@ export class VisualizerComponent extends Component {
         const finishNode = grid[FINISH_POS_ROW][FINISH_POS_COL]
         console.log(grid)
         const visitedNodeInOrder = breadthFristSearch(grid.slice(), startNode, finishNode)
+        if(!visitedNodeInOrder) return
         //console.log(visitedNodeInOrder)
         const BFSPath = getBFSPath(finishNode)
         this.animateBreadthFirstSearch(visitedNodeInOrder, BFSPath)
@@ -336,10 +356,44 @@ export class VisualizerComponent extends Component {
         const finishNode = grid[FINISH_POS_ROW][FINISH_POS_COL]
         //console.log(grid)
         const visitedNodeInOrder = bestFirstSearch(grid.slice(), startNode, finishNode)
+        if(!visitedNodeInOrder) return
         //console.log(visitedNodeInOrder)
         const GBFSPath = getGBFSPath(finishNode)
         //console.log(GBFSPath)
         this.animateBestFirstSearch(visitedNodeInOrder, GBFSPath)
+      }, 500)   
+    }
+
+    animateAStarSearch = (visitedNodeInOrder, GBFSPath) => {
+      const grid = this.state.grid
+      for(let i = 0; i < visitedNodeInOrder.length; i++){
+        grid[visitedNodeInOrder[i].row][visitedNodeInOrder[i].col] = visitedNodeInOrder[i]
+        if(i === visitedNodeInOrder.length - 1){
+          setTimeout(() => {
+            //this.printShortestPath(GBFSPath, grid)
+          }, i * 30)
+        }
+        setTimeout(() => {
+          const node = visitedNodeInOrder[i]
+          this.nodeRef[node.row][node.col].current.toggleVisited()
+        }, i * 30)
+      }
+    }
+
+    visualizeAStarSearch = () => {
+      this.setState({mousePointerEvents : 'none'})
+      this.clearVisitedNode(false)
+      setTimeout(() => {
+        const {grid} = this.state
+        const startNode = grid[START_POS_ROW][START_POS_COL]
+        const finishNode = grid[FINISH_POS_ROW][FINISH_POS_COL]
+        //console.log(grid)
+        const visitedNodeInOrder = aStarSearch(grid.slice(), startNode, finishNode)
+        if(!visitedNodeInOrder) return
+        //console.log(visitedNodeInOrder)
+        //const GBFSPath = getGBFSPath(finishNode)
+        //console.log(GBFSPath)
+        this.animateAStarSearch(visitedNodeInOrder)
       }, 500)
         
     }
@@ -362,6 +416,7 @@ export class VisualizerComponent extends Component {
             <NavDropdown.Item href="" onClick={() => this.visualizeDepthFirstSearch()}>Visualize Depth Fisrt Search</NavDropdown.Item>
             <NavDropdown.Item href="" onClick={() => this.visualizeBreadthFirstSearch()}>Visualize Breadth Fisrt Search</NavDropdown.Item>
             <NavDropdown.Item href="" onClick={() => this.visualizeBestFirstSearch()}>Visualize Best Fisrt Search</NavDropdown.Item>
+            <NavDropdown.Item href="" onClick={() => this.visualizeAStarSearch()}>Visualize A* Search</NavDropdown.Item>
             </NavDropdown>
             <Nav.Link onClick={() => this.clearVisitedNode(true)} style={{ pointerEvents : this.state.mousePointerEvents }}>clear board</Nav.Link>
             </Navbar>

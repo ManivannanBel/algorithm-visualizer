@@ -7,9 +7,9 @@ export function dijkstra(grid, startNode, finishNode) {
 
     const visitedNodeOrder = []
     startNode.distance = 0
-    //const unvisitedNodes = getAllNodes(grid)
+    
 
-    heap.insert(startNode)
+    /*heap.insert(startNode)
     
     while (!heap.isEmpty()) {
         const closestNode = heap.extractMin()
@@ -27,22 +27,24 @@ export function dijkstra(grid, startNode, finishNode) {
         }
         //Update the distance and parent of the neighbouring nodes
         updateUnvisitedNeighbours(closestNode, grid)
-    }
-
-    /*while (unvisitedNodes.length !== 0) {
+    }*/
+    const unvisitedNodes = getAllNodes(grid)
+    while (unvisitedNodes.length !== 0) {
         sortUnvistedNodesByDistance(unvisitedNodes)
         const closestNode = unvisitedNodes.shift()
         
         //const closestNode = heap.extractMin()
         console.log(closestNode)
         
+        //If the start node is fully surrounded by wall
+        if(closestNode.distance === Infinity) return visitedNodeOrder
+
         if(closestNode.isVisited) continue
 
         closestNode.isVisited = true;
         //If the node is wall then ignore it
         if(closestNode.isWall) continue
-        //If the start node is fully surrounded by wall
-        if(closestNode.distance === Infinity) return visitedNodeOrder
+        
         //If the node is visited then add it to the visited list
         visitedNodeOrder.push(closestNode)
         //If target node is found
@@ -53,12 +55,12 @@ export function dijkstra(grid, startNode, finishNode) {
         }
         //Update the distance and parent of the neighbouring nodes
         updateUnvisitedNeighbours(closestNode, grid)
-    }*/
+    }
 }
 
-/*function sortUnvistedNodesByDistance(unvisitedNodes){
+function sortUnvistedNodesByDistance(unvisitedNodes){
     unvisitedNodes.sort((nodeA, nodeB) => nodeA.distance - nodeB.distance)
-}*/
+}
 
 function updateUnvisitedNeighbours(node, grid){
     const unvisitedNeighbours = getUnvisitedNeighbours(node, grid)
@@ -66,7 +68,7 @@ function updateUnvisitedNeighbours(node, grid){
         neighbour.distance = node.distance + 1
         neighbour.previousNode = node
         
-        heap.insert(neighbour)
+       // heap.insert(neighbour)
     }
 }
 
@@ -83,7 +85,7 @@ function getUnvisitedNeighbours(node, grid){
     return neighbours*/
 }
 
-/*function getAllNodes(grid){
+function getAllNodes(grid){
     const nodes = []
     for(let row of grid){
         for(let node of row){
@@ -91,7 +93,7 @@ function getUnvisitedNeighbours(node, grid){
         }
     }
     return nodes
-}*/
+}
 
 export function getShortestPath(finishNode){
     const shortestPath = []
