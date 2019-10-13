@@ -4,7 +4,7 @@ import {dijkstra, getShortestPath} from '../Algorithms/dijkstra'
 import {depthFirstSearch, getDFSPath} from '../Algorithms/depthFirstSearch'
 import {breadthFristSearch, getBFSPath} from '../Algorithms/breadthFirstSearch'
 import {bestFirstSearch, getGBFSPath} from '../Algorithms/bestFirstSearch'
-import { aStarSearch } from "../Algorithms/aStarSearch";
+import { aStarSearch, getAStarPath } from "../Algorithms/aStarSearch";
 
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
@@ -33,36 +33,59 @@ export class VisualizerComponent extends Component {
         this.nodeRef = []
     }
 
-      handleMouseDown = (row, col) => {
-        //if(this.state.algorithmRunning) return
-        if(this.state.grid[row][col].isStart || this.state.grid[row][col].isFinish)
-          return 
+      handleMouseClick = (row, col) => {
         if(!this.state.grid[row][col].isWall){
           const newGrid = this.buildWall(row, col)
-          this.setState({grid : newGrid, mousePressed : true})
+          this.setState({grid : newGrid})
         }else{
           const newGrid = this.removeWall(row, col)
           this.setState({grid : newGrid})
         }
       }
 
-      handleMouseEnter = (row, col) => {
+      handleMouseDown = (row, col) => {
+        console.log('mouse down')
         //if(this.state.algorithmRunning) return
         if(this.state.grid[row][col].isStart || this.state.grid[row][col].isFinish)
           return 
-        if(this.state.mousePressed){
+        if(!this.state.grid[row][col].isWall){
+          const newGrid = this.buildWall(row, col)
+          this.tempGrid = newGrid
+          this.mousePressed = true
+          this.nodeRef[row][col].current.toggleWall()
+          //this.setState({/*grid : newGrid,*/ mousePressed : true})
+        }else{
+          const newGrid = this.removeWall(row, col)
+          this.tempGrid = newGrid
+          this.nodeRef[row][col].current.toggleReset()
+          //this.setState({grid : newGrid})
+        }
+      }
+
+      handleMouseEnter = (row, col) => {
+        console.log('mouse enter')
+        //if(this.state.algorithmRunning) return
+        if(this.state.grid[row][col].isStart || this.state.grid[row][col].isFinish)
+          return 
+        if(this.mousePressed){
           if(!this.state.grid[row][col].isWall){
             const newGrid = this.buildWall(row, col)
-            this.setState({grid : newGrid, mousePressed : true})
+            this.tempGrid = newGrid
+            this.nodeRef[row][col].current.toggleWall()
+            //this.setState({grid : newGrid})
           }else{
             const newGrid = this.removeWall(row, col)
-            this.setState({grid : newGrid})
+            this.tempGrid = newGrid
+            this.nodeRef[row][col].current.toggleReset()
+            //this.setState({grid : newGrid})
           }
         }
       }
     
       handleMouseUp = () => {
-        this.setState({mousePressed : false})
+        console.log('mouse up')
+        this.mousePressed = false
+        this.setState({grid : this.tempGrid/*, mousePressed : false*/})
       }
 
       buildWall = (row, col) => {
@@ -364,13 +387,13 @@ export class VisualizerComponent extends Component {
       }, 500)   
     }
 
-    animateAStarSearch = (visitedNodeInOrder, GBFSPath) => {
+    animateAStarSearch = (visitedNodeInOrder, AStarPath) => {
       const grid = this.state.grid
       for(let i = 0; i < visitedNodeInOrder.length; i++){
         grid[visitedNodeInOrder[i].row][visitedNodeInOrder[i].col] = visitedNodeInOrder[i]
         if(i === visitedNodeInOrder.length - 1){
           setTimeout(() => {
-            //this.printShortestPath(GBFSPath, grid)
+            this.printShortestPath(AStarPath, grid)
           }, i * 30)
         }
         setTimeout(() => {
@@ -391,9 +414,9 @@ export class VisualizerComponent extends Component {
         const visitedNodeInOrder = aStarSearch(grid.slice(), startNode, finishNode)
         if(!visitedNodeInOrder) return
         //console.log(visitedNodeInOrder)
-        //const GBFSPath = getGBFSPath(finishNode)
+        const AStarPath = getAStarPath(finishNode)
         //console.log(GBFSPath)
-        this.animateAStarSearch(visitedNodeInOrder)
+        this.animateAStarSearch(visitedNodeInOrder, AStarPath)
       }, 500)
         
     }
@@ -440,6 +463,7 @@ export class VisualizerComponent extends Component {
                               onMouseDown={(row, col) => this.handleMouseDown(row, col)}
                               onMouseEnter={(row, col) => this.handleMouseEnter(row, col)}
                               onMouseUp={() => this.handleMouseUp()}
+                              
                               ref={this.nodeRef[column.row][column.col]}
                             />
                           </td>

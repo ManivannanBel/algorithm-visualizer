@@ -33,6 +33,9 @@ export class Node extends Component {
       this.ref.current.className = 'node finish-node'
     }
 
+    toggleWall = () => {
+      this.ref.current.className = 'node wall-node'
+    }
     
 
     render() {
@@ -45,9 +48,10 @@ export class Node extends Component {
           <div ref={this.ref}
             id={`node-${row}-${col}`}
             className={`node ${extraclassName}`}
+
             onMouseDown={() => onMouseDown(row, col)}
             onMouseEnter={() => onMouseEnter(row, col)}
-            onMouseUp={() => onMouseUp()}>
+            onClick={() => onMouseUp()}>
            </div>
         );
     }

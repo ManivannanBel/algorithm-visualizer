@@ -54,7 +54,7 @@ function updateNeighbours(grid, node, targetNode, minHeap){
         neighbour.hurestic = hurestics(neighbour, targetNode, 'manhattan_distance')
         neighbour.distance = (neighbour.generatedDistance + neighbour.hurestic)
         neighbour.previousNode = node
-        if(!minHeap.isEmpty() && (minHeap.getMin()).distance < neighbour.distance) continue
+        //if(!minHeap.isEmpty() && (minHeap.getMin()).distance < neighbour.distance) continue
         minHeap.insert(neighbour)
     }
 }
@@ -69,4 +69,20 @@ function getUnvisitedNeighbours(grid, node){
     if(col < grid[0].length - 1) neighbours.push(grid[row][col + 1])
    
     return neighbours.filter(neighbour => !neighbour.isVisited)
+}
+
+export function getAStarPath(finishNode){
+    const aStarPath = []
+    
+    //if there is no path
+    if(finishNode.previousNode === null)
+        return aStarPath
+
+    var currentNode = finishNode
+    while(currentNode !== null){
+        currentNode = { ...currentNode, isPath : true}
+        aStarPath.unshift(currentNode)
+        currentNode = currentNode.previousNode
+    }
+    return aStarPath
 }
