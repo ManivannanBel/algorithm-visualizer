@@ -4,7 +4,8 @@ import {dijkstra, getShortestPath} from '../Algorithms/dijkstra'
 import {depthFirstSearch, getDFSPath} from '../Algorithms/depthFirstSearch'
 import {breadthFristSearch, getBFSPath} from '../Algorithms/breadthFirstSearch'
 import {bestFirstSearch, getGBFSPath} from '../Algorithms/bestFirstSearch'
-import { aStarSearch, getAStarPath } from "../Algorithms/aStarSearch";
+import { aStarSearch, getAStarPath } from "../Algorithms/aStarSearch"
+import { bidirectionalSearch, getBidirectionalShortestPath } from "../Algorithms/bidirectionalSearch";
 
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
@@ -14,9 +15,9 @@ import './VisualizerComponent.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 const START_POS_ROW = 10
-const START_POS_COL = 5
-const FINISH_POS_ROW = 10
-const FINISH_POS_COL = 45
+const START_POS_COL = 7
+const FINISH_POS_ROW = 7
+const FINISH_POS_COL = 4
 
 export class VisualizerComponent extends Component {
 
@@ -74,9 +75,9 @@ export class VisualizerComponent extends Component {
             this.nodeRef[row][col].current.toggleWall()
             //this.setState({grid : newGrid})
           }else{
-            const newGrid = this.removeWall(row, col)
+            /*const newGrid = this.removeWall(row, col)
             this.tempGrid = newGrid
-            this.nodeRef[row][col].current.toggleReset()
+            this.nodeRef[row][col].current.toggleReset()*/
             //this.setState({grid : newGrid})
           }
         }
@@ -134,10 +135,12 @@ export class VisualizerComponent extends Component {
         isStart : row === START_POS_ROW && col === START_POS_COL,
         isFinish : row ===  FINISH_POS_ROW && col === FINISH_POS_COL,
         distance : Infinity,
-        hurestic : Infinity,
-        generatedDistance : Infinity,
+        hurestic : null,
+        gCost : Infinity,
         previousNode : null ,
+        nextNode : null,
         isVisited : false,
+        isVisitedFromOther : false,
         isWall : false,
         isPath : false
         }
@@ -169,10 +172,12 @@ export class VisualizerComponent extends Component {
         ...node,
         isPath: false,
         isVisited: false,
+        isVisitedFromOther : false,
         previousNode: null,
+        nextNode : null,
         distance : Infinity,
-        generatedDistance : Infinity,
-        hurestic : Infinity
+        gCost : Infinity,
+        hurestic : null
       }
       grid[row][col] = newNode
       this.nodeRef[node.row][node.col].current.toggleStart();
@@ -183,10 +188,12 @@ export class VisualizerComponent extends Component {
         ...node,
         isPath: false,
         isVisited: false,
+        isVisitedFromOther : false,
         previousNode: null,
+        nextNode : null,
         distance : Infinity,
-        generatedDistance : Infinity,
-        hurestic : Infinity
+        gCost : Infinity,
+        hurestic : null
       }
       grid[row][col] = newNode
       this.nodeRef[node.row][node.col].current.toggleFinish();
@@ -200,11 +207,13 @@ export class VisualizerComponent extends Component {
           ...node,
           isPath: false,
           isVisited: false,
+          isVisitedFromOther : false,
           previousNode: null,
+          nextNode : null,
           isWall : true,
           distance : Infinity,
-          generatedDistance : Infinity,
-          hurestic : Infinity
+          gCost : Infinity,
+          hurestic : null
         }
         grid[row][col] = newNode
       }
@@ -215,11 +224,13 @@ export class VisualizerComponent extends Component {
         ...node,
         isPath: false,
         isVisited: false,
+        isVisitedFromOther : false,
         previousNode: null,
+        nextNode : null,
         isWall : false,
         distance : Infinity,
-        generatedDistance : Infinity,
-        hurestic : Infinity
+        gCost : Infinity,
+        hurestic : null
       }
 
       grid[row][col] = newNode
@@ -422,6 +433,42 @@ export class VisualizerComponent extends Component {
         
     }
 
+    animateBidirectionalSearch = (visitedNodeInOrder, GBFSPath) => {
+      const grid = this.state.grid
+      for(let i = 0; i < visitedNodeInOrder.length; i++){
+        grid[visitedNodeInOrder[i].row][visitedNodeInOrder[i].col] = visitedNodeInOrder[i]
+        if(i === visitedNodeInOrder.length - 1){
+          setTimeout(() => {
+            this.printShortestPath(GBFSPath, grid)
+          }, i * 15)
+        }
+        setTimeout(() => {
+          const node = visitedNodeInOrder[i]
+          this.nodeRef[node.row][node.col].current.toggleVisited()
+        }, i * 15)
+      }
+    }
+
+    visualizeBidirectionalSearch = () => {
+      this.setState({mousePointerEvents : 'none'})
+      this.clearVisitedNode(false)
+      setTimeout(() => {
+        const {grid} = this.state
+        const startNode = grid[START_POS_ROW][START_POS_COL]
+        const finishNode = grid[FINISH_POS_ROW][FINISH_POS_COL]
+        //console.log(grid)
+        const visitedNodeInOrder = bidirectionalSearch(grid.slice(), startNode, finishNode)
+        console.log(visitedNodeInOrder.pop())
+        if(!visitedNodeInOrder) return
+        //console.log(visitedNodeInOrder)
+        const middle1 = visitedNodeInOrder.pop()
+        const path = getBidirectionalShortestPath(middle1)
+        console.log(middle1)
+        //console.log(path)
+        this.animateBidirectionalSearch(visitedNodeInOrder, path)
+      }, 500)   
+    }
+
     
     render() {
         const grid = this.state.grid
@@ -441,6 +488,7 @@ export class VisualizerComponent extends Component {
             <NavDropdown.Item href="" onClick={() => this.visualizeBreadthFirstSearch()}>Visualize Breadth Fisrt Search</NavDropdown.Item>
             <NavDropdown.Item href="" onClick={() => this.visualizeBestFirstSearch()}>Visualize Best Fisrt Search</NavDropdown.Item>
             <NavDropdown.Item href="" onClick={() => this.visualizeAStarSearch()}>Visualize A* Search</NavDropdown.Item>
+            <NavDropdown.Item href="" onClick={() => this.visualizeBidirectionalSearch()}>Visualize Bidirectional Search Search</NavDropdown.Item>
             </NavDropdown>
             <Nav.Link onClick={() => this.clearVisitedNode(true)} style={{ pointerEvents : this.state.mousePointerEvents }}>clear board</Nav.Link>
             </Navbar>
