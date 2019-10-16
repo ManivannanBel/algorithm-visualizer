@@ -10,14 +10,18 @@ export function bidirectionalSearch(grid, startNode, finishNode) {
         const fromFinish = queue2.shift()
         if(fromFinish.isVisited){
             console.log(fromFinish)
-            //visitedNodes.push(fromFinish)
+            visitedNodes.push(fromFinish)
             return visitedNodes
         }
         if(fromStart.isVisitedFromOther){
             console.log(fromStart)
-            //visitedNodes.push(fromStart)
+            visitedNodes.push(fromStart)
             return visitedNodes
         }
+        if(fromStart === fromFinish){
+            return visitedNodes
+        }
+
         if(fromStart.isVisited && fromFinish.isVisitedFromOther) 
             continue
         else if(fromStart.isVisited){
@@ -52,9 +56,7 @@ export function bidirectionalSearch(grid, startNode, finishNode) {
                 queue1.push(neighbour)
             }
         }
-        if(fromStart === fromFinish){
-            return visitedNodes
-        }
+
     }
     return visitedNodes
 }
@@ -71,14 +73,22 @@ function getNeighbours(grid, node, direction){
         return neighbours.filter(neighbour => !neighbour.isVisited && !neighbour.isWall)
     return neighbours.filter(neighbour => !neighbour.isVisitedFromOther && !neighbour.isWall)
 }
-export function getBidirectionalShortestPath(middle1){
+export function getBidirectionalShortestPath(middle1 , finishNode){
     const pathList = []
     const path1 = []
     const path2 = []
-
-    while(middle1 !== middle1){
+    let middle2 = middle1.nextNode
+    while(middle1 !== null){
+        middle1.isPath = true
         path1.unshift(middle1)
         middle1 = middle1.previousNode
     }
-    return path1
+
+    while(middle2 !== null){
+        middle2.isPath = true
+        path2.push(middle2)
+        middle2 = middle2.nextNode
+    }
+
+    return path1.concat(path2)
 }

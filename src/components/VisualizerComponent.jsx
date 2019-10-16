@@ -410,12 +410,12 @@ export class VisualizerComponent extends Component {
         if(i === visitedNodeInOrder.length - 1){
           setTimeout(() => {
             this.printShortestPath(AStarPath, grid)
-          }, i * 30)
+          }, i * 10)
         }
         setTimeout(() => {
           const node = visitedNodeInOrder[i]
           this.nodeRef[node.row][node.col].current.toggleVisited()
-        }, i * 30)
+        }, i * 10)
       }
     }
 
@@ -463,13 +463,13 @@ export class VisualizerComponent extends Component {
         const finishNode = grid[FINISH_POS_ROW][FINISH_POS_COL]
         //console.log(grid)
         const visitedNodeInOrder = bidirectionalSearch(grid.slice(), startNode, finishNode)
-        console.log(visitedNodeInOrder.pop())
+        //console.log(visitedNodeInOrder.pop())
         if(!visitedNodeInOrder) return
-        //console.log(visitedNodeInOrder)
-        const middle1 = visitedNodeInOrder.pop()
-        const path = getBidirectionalShortestPath(middle1)
-        console.log(middle1)
-        //console.log(path)
+        console.log(visitedNodeInOrder.length)
+        const middle1 = visitedNodeInOrder[visitedNodeInOrder.length - 1]
+        const path = getBidirectionalShortestPath(middle1, finishNode)
+        //console.log(middle1)
+        console.log(path)
         this.animateBidirectionalSearch(visitedNodeInOrder, path)
       }, 500)   
     }
