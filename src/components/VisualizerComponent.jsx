@@ -493,7 +493,7 @@ export class VisualizerComponent extends Component {
             <NavDropdown.Item href="" onClick={() => this.visualizeBreadthFirstSearch()}>Visualize Breadth Fisrt Search</NavDropdown.Item>
             <NavDropdown.Item href="" onClick={() => this.visualizeBestFirstSearch()}>Visualize Best Fisrt Search</NavDropdown.Item>
             <NavDropdown.Item href="" onClick={() => this.visualizeAStarSearch()}>Visualize A* Search</NavDropdown.Item>
-            <NavDropdown.Item href="" onClick={() => this.visualizeBidirectionalSearch()}>Visualize Bidirectional Search Search</NavDropdown.Item>
+            <NavDropdown.Item href="" onClick={() => this.visualizeBidirectionalSearch()}>Visualize Bidirectional Search Search (BFS)</NavDropdown.Item>
             </NavDropdown>
             <Nav.Link onClick={() => this.clearVisitedNode(true)} style={{ pointerEvents : this.state.mousePointerEvents }}>clear board</Nav.Link>
             </Navbar>

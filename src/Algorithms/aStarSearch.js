@@ -40,7 +40,7 @@ export function aStarSearch(grid, startNode, finishNode){
             if(closedSet.has(neighbour))
                 continue
             
-            let ng = currentNode.gCost + 1
+            let ng = currentNode.gCost + getDistance(currentNode, neighbour)
 
             if(!openSet.has(neighbour) || ng < neighbour.gCost){
                 neighbour.gCost = ng
