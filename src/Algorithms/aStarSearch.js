@@ -1,59 +1,63 @@
 import {MinHeap} from './Helper/minHeap'
+import Heap from 'heap'
 
 export function aStarSearch(grid, startNode, finishNode){
 
     if(!startNode || !finishNode || startNode === finishNode)
         return false
 
-    let openSet = []
-    const closedSet = new Set()
+    let openList = new Heap(function(nodeA, nodeB) {
+        return nodeA.fCost - nodeB.fCost;
+    })
 
     const visitedNodes = []
-
-    startNode.gCost = 0
-    startNode.distance = 0
-    openSet.push(startNode)
     
-    while(openSet.length !== 0){
-        let currentNode = openSet.shift()
-        for(let i = 0; i < openSet.length; i++){
-            if(openSet[i].distance < currentNode.distance || openSet[i].distance === currentNode.distance){
-                if(openSet[i].hurestic < currentNode.hurestic){
-                    currentNode = openSet[i]
-                }
-            }
-        }
-        //currentNode.isVisited = true
-        visitedNodes.push(currentNode)
-        openSet = openSet.filter(node => node !== currentNode)
+    const openSet = new Set()
+    const closedSet = new Set()
+
+    startNode.fCost = 0
+    startNode.gCost = 0
+
+    openList.push(startNode)
+    openSet.add(startNode)
+
+    while(!openList.empty()){
+
+        const currentNode = openList.pop()
+        openSet.delete(currentNode)
         closedSet.add(currentNode)
+
+        visitedNodes.push(currentNode)
 
         if(currentNode === finishNode){
             return visitedNodes
         }
 
-        const neighbours = getUnvisitedNeighbours(grid, currentNode)
-        for(const neighbour of neighbours){
-            if(neighbour.isWall || closedSet.has(neighbour)){
+        const neighbours = getNeighbours(grid, currentNode)
+        for(let i = 0, l = neighbours.length; i < l ; ++i){
+            const neighbour = neighbours[i]
+            
+            if(closedSet.has(neighbour))
                 continue
-            }
+            
+            let ng = currentNode.gCost + 1
 
-            const tentativeCost = currentNode.gCost + 1
-            if(tentativeCost < neighbour.gCost || !openSet.includes(neighbour)){
-                neighbour.gCost = tentativeCost
-                neighbour.hurestic = hurestics(currentNode, finishNode, 'manhattan_distance')
-                neighbour.distance = neighbour.gCost + neighbour.hurestic
+            if(!openSet.has(neighbour) || ng < neighbour.gCost){
+                neighbour.gCost = ng
+                neighbour.hCost = hurestics(currentNode, neighbour, 'manhattan_distance')
+                neighbour.fCost = neighbour.gCost + neighbour.hCost
                 neighbour.previousNode = currentNode
 
-                if(!openSet.includes(neighbour)){
-                    openSet.push(neighbour)
+                if(!openSet.has(neighbour)){
+                    openList.push(neighbour)
+                    openSet.add(neighbour)
+                }else{
+                    openList.updateItem(neighbour)
                 }
             }
-
-        }
-
+        }  
     }
-    
+
 }
 
 function getDistance(node, target){
@@ -83,7 +87,7 @@ function euclideanDistance(node, targetNode){
 }
 
 
-function getUnvisitedNeighbours(grid, node){
+function getNeighbours(grid, node){
     const neighbours = []
     const {row, col} = node
 
@@ -91,8 +95,8 @@ function getUnvisitedNeighbours(grid, node){
     if(row < grid.length - 1) neighbours.push(grid[row + 1][col])
     if(col > 0) neighbours.push(grid[row][col - 1])
     if(col < grid[0].length - 1) neighbours.push(grid[row][col + 1])
-   
-    return neighbours.filter(neighbour => !neighbour.isVisited)
+    
+    return neighbours.filter(neighbour => !neighbour.isWall)
 }
 
 export function getAStarPath(finishNode){

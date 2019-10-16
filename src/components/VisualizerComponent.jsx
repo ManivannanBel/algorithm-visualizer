@@ -16,8 +16,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 
 const START_POS_ROW = 10
 const START_POS_COL = 7
-const FINISH_POS_ROW = 7
-const FINISH_POS_COL = 4
+const FINISH_POS_ROW = 10
+const FINISH_POS_COL = 45
 
 export class VisualizerComponent extends Component {
 
@@ -135,8 +135,9 @@ export class VisualizerComponent extends Component {
         isStart : row === START_POS_ROW && col === START_POS_COL,
         isFinish : row ===  FINISH_POS_ROW && col === FINISH_POS_COL,
         distance : Infinity,
-        hurestic : null,
-        gCost : Infinity,
+        hCost : null,
+        gCost : null,
+        fCost : null,
         previousNode : null ,
         nextNode : null,
         isVisited : false,
@@ -176,8 +177,9 @@ export class VisualizerComponent extends Component {
         previousNode: null,
         nextNode : null,
         distance : Infinity,
-        gCost : Infinity,
-        hurestic : null
+        hCost : null,
+        gCost : null,
+        fCost : null,
       }
       grid[row][col] = newNode
       this.nodeRef[node.row][node.col].current.toggleStart();
@@ -192,8 +194,9 @@ export class VisualizerComponent extends Component {
         previousNode: null,
         nextNode : null,
         distance : Infinity,
-        gCost : Infinity,
-        hurestic : null
+        hCost : null,
+        gCost : null,
+        fCost : null,
       }
       grid[row][col] = newNode
       this.nodeRef[node.row][node.col].current.toggleFinish();
@@ -212,8 +215,9 @@ export class VisualizerComponent extends Component {
           nextNode : null,
           isWall : true,
           distance : Infinity,
-          gCost : Infinity,
-          hurestic : null
+          hCost : null,
+        gCost : null,
+        fCost : null,
         }
         grid[row][col] = newNode
       }
@@ -229,8 +233,9 @@ export class VisualizerComponent extends Component {
         nextNode : null,
         isWall : false,
         distance : Infinity,
-        gCost : Infinity,
-        hurestic : null
+        hCost : null,
+        gCost : null,
+        fCost : null,
       }
 
       grid[row][col] = newNode
