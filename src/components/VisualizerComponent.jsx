@@ -165,7 +165,7 @@ export class VisualizerComponent extends Component {
         }
       }
       this.setState({grid : newGrid})
-      console.log(this.state.grid)
+      //console.log(this.state.grid)
     }
 
     resetStartNode = (row, col, grid, node) => {
@@ -430,7 +430,7 @@ export class VisualizerComponent extends Component {
         //console.log(grid)
         const visitedNodeInOrder = aStarSearch(grid.slice(), startNode, finishNode)
         if(!visitedNodeInOrder) return
-        //console.log(visitedNodeInOrder)
+        console.log(visitedNodeInOrder)
         const AStarPath = getAStarPath(finishNode)
         //console.log(GBFSPath)
         this.animateAStarSearch(visitedNodeInOrder, AStarPath)

@@ -12,19 +12,23 @@ export function aStarSearch(grid, startNode, finishNode){
 
     const visitedNodes = []
     
-    const openSet = new Set()
+    //const openSet = new Set()
     const closedSet = new Set()
 
     startNode.fCost = 0
     startNode.gCost = 0
+    startNode.hCost = manhattanDistance(startNode, finishNode)
 
     openList.push(startNode)
-    openSet.add(startNode)
+    //openSet.add(startNode)
 
     while(!openList.empty()){
 
+        
+        openList.heapify();
         const currentNode = openList.pop()
-        openSet.delete(currentNode)
+        console.log(currentNode.fCost);
+        //openSet.delete(currentNode)
         closedSet.add(currentNode)
 
         visitedNodes.push(currentNode)
@@ -40,21 +44,32 @@ export function aStarSearch(grid, startNode, finishNode){
             if(closedSet.has(neighbour))
                 continue
             
-            let ng = currentNode.gCost + getDistance(currentNode, neighbour)
+            let ng = currentNode.gCost + 1;
 
-            if(!openSet.has(neighbour) || ng < neighbour.gCost){
-                neighbour.gCost = ng
-                neighbour.hCost = hurestics(currentNode, neighbour, 'manhattan_distance')
-                neighbour.fCost = neighbour.gCost + neighbour.hCost
-                neighbour.previousNode = currentNode
+            if(openList.has(neighbour)){
 
-                if(!openSet.has(neighbour)){
-                    openList.push(neighbour)
-                    openSet.add(neighbour)
-                }else{
-                    openList.updateItem(neighbour)
+                if(ng < neighbour.gCost){
+                    neighbour.gCost = ng
+                    neighbour.hCost = hurestics(neighbour, finishNode, 'manhattan_distance')
+                    neighbour.fCost = neighbour.gCost + neighbour.hCost
+                    neighbour.previousNode = currentNode   
+                    openList.updateItem(neighbour) 
                 }
+
+                if(/*!openSet.has(neighbour)*/!openList.has(neighbour)){
+                    //openList.push(neighbour)
+                    //openSet.add(neighbour)
+                }else{
+                    //openList.updateItem(neighbour)
+                }
+            }else{
+                    neighbour.gCost = ng
+                    neighbour.hCost = hurestics(neighbour, finishNode, 'manhattan_distance')
+                    neighbour.fCost = neighbour.gCost + neighbour.hCost
+                    neighbour.previousNode = currentNode   
+                    openList.push(neighbour) 
             }
+
         }  
     }
 
