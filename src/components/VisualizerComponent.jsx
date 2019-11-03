@@ -18,6 +18,9 @@ const START_POS_ROW = 10
 const START_POS_COL = 7
 const FINISH_POS_ROW = 11
 const FINISH_POS_COL = 45 
+const SLOW_SPEED = 30
+const MEDIUM_SPEED = 20
+const FAST_SPEED = 10
 
 export class VisualizerComponent extends Component {
 
@@ -27,7 +30,8 @@ export class VisualizerComponent extends Component {
         this.state = {
              grid : [],
              mousePressed : false,
-             mousePointerEvents : 'auto'
+             mousePointerEvents : 'auto',
+             selectedAlgorithm : ''
         }
         
         //Refs for all the nodes
@@ -330,9 +334,7 @@ export class VisualizerComponent extends Component {
           if(!visitedNodeInOrder) return
           const DFSPath = getDFSPath(finishNode)
           this.animateDepthFirstSearch(visitedNodeInOrder, DFSPath)  
-        },500)
-
-         
+        },500)    
     }
 
     animateBreadthFirstSearch = (visitedNodeInOrder, DFSPath) => {
@@ -474,6 +476,40 @@ export class VisualizerComponent extends Component {
       }, 500)   
     }
 
+    visualizeSelectedAlgorithm = () => {
+      const {selectedAlgorithm} = this.state;
+      console.log(selectedAlgorithm)
+      switch(selectedAlgorithm){
+        case "Dijkstra Algorithm":
+          this.visualizeDijkstra();
+          break;
+        case "Depth first search":
+          this.visualizeDepthFirstSearch();
+          break;
+        case "Breadth frist search":
+          this.visualizeBreadthFirstSearch();
+          break;
+        case "Greedy Best first search":
+          this.visualizeBestFirstSearch();
+          break;
+        case "A* search":
+          this.visualizeAStarSearch();
+          break;
+        case "Bidirectional BFS":
+          this.visualizeBidirectionalSearch();
+          break;
+        default:
+          window.alert("select an algorithm!");
+      }
+
+    }
+
+    selectAlgorithm = (algorithm) => {
+      //console.log(algorithm)
+      this.setState({selectedAlgorithm : algorithm})
+      //console.log(this.state.selectedAlgorithm)
+    }
+
     
     render() {
         const grid = this.state.grid
@@ -488,14 +524,15 @@ export class VisualizerComponent extends Component {
             <Navbar bg="light">
             <Navbar.Brand href="#">Algorithm Visualizer</Navbar.Brand>
             <NavDropdown title="Select Algorithm" id="basic-nav-dropdown" style={{ pointerEvents : this.state.mousePointerEvents }}>
-            <NavDropdown.Item href="" onClick={() => this.visualizeDijkstra()}>Visualize Dijkstra</NavDropdown.Item>
-            <NavDropdown.Item href="" onClick={() => this.visualizeDepthFirstSearch()}>Visualize Depth Fisrt Search</NavDropdown.Item>
-            <NavDropdown.Item href="" onClick={() => this.visualizeBreadthFirstSearch()}>Visualize Breadth Fisrt Search</NavDropdown.Item>
-            <NavDropdown.Item href="" onClick={() => this.visualizeBestFirstSearch()}>Visualize Best Fisrt Search</NavDropdown.Item>
-            <NavDropdown.Item href="" onClick={() => this.visualizeAStarSearch()}>Visualize A* Search</NavDropdown.Item>
-            <NavDropdown.Item href="" onClick={() => this.visualizeBidirectionalSearch()}>Visualize Bidirectional Search Search (BFS)</NavDropdown.Item>
+            <NavDropdown.Item href="" onClick={() => this.selectAlgorithm("Dijkstra Algorithm")}>Visualize Dijkstra</NavDropdown.Item>
+            <NavDropdown.Item href="" onClick={() => this.selectAlgorithm("Depth first search")}>Visualize Depth Fisrt Search</NavDropdown.Item>
+            <NavDropdown.Item href="" onClick={() => this.selectAlgorithm("Breadth frist search")}>Visualize Breadth Fisrt Search</NavDropdown.Item>
+            <NavDropdown.Item href="" onClick={() => this.selectAlgorithm("Greedy Best first search")}>Visualize Best Fisrt Search</NavDropdown.Item>
+            <NavDropdown.Item href="" onClick={() => this.selectAlgorithm("A* search")}>Visualize A* Search</NavDropdown.Item>
+            <NavDropdown.Item href="" onClick={() => this.selectAlgorithm("Bidirectional BFS")}>Visualize Bidirectional Search Search (BFS)</NavDropdown.Item>
             </NavDropdown>
             <Nav.Link onClick={() => this.clearVisitedNode(true)} style={{ pointerEvents : this.state.mousePointerEvents }}>clear board</Nav.Link>
+            <Nav.Link className="btn btn-danger" onClick={() => this.visualizeSelectedAlgorithm()} style={{ pointerEvents : this.state.mousePointerEvents }}>Visualize {this.state.selectedAlgorithm}</Nav.Link>
             </Navbar>
             </div>
             <div className="grid" style={{ pointerEvents : this.state.mousePointerEvents }}>
