@@ -124,7 +124,7 @@ export class VisualizerComponent extends Component {
         for(let row = 0 ; row < 21 ; row++){
             const columnRow = []
             const rowRef = []
-            for(let column = 0 ; column < 50 ; column++){
+            for(let column = 0 ; column < 51 ; column++){
                 columnRow.push(this.createNode(row, column))
                 rowRef.push(React.createRef())      
             }
