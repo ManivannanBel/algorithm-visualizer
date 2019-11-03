@@ -1,7 +1,7 @@
 import {MinHeap} from './Helper/minHeap'
 import Heap from 'heap'
 
-export function aStarSearch(grid, startNode, finishNode){
+/*export function aStarSearch(grid, startNode, finishNode){
 
     if(!startNode || !finishNode || startNode === finishNode)
         return false
@@ -26,8 +26,10 @@ export function aStarSearch(grid, startNode, finishNode){
 
         
         openList.heapify();
+        //console.log(openList);
         const currentNode = openList.pop()
         console.log(currentNode.fCost);
+        console.log(currentNode)
         //openSet.delete(currentNode)
         closedSet.add(currentNode)
 
@@ -56,12 +58,90 @@ export function aStarSearch(grid, startNode, finishNode){
                     openList.updateItem(neighbour) 
                 }
 
-                if(/*!openSet.has(neighbour)*/!openList.has(neighbour)){
+                if(/*!openSet.has(neighbour)!openList.has(neighbour)){
                     //openList.push(neighbour)
                     //openSet.add(neighbour)
                 }else{
                     //openList.updateItem(neighbour)
                 }
+            }else{
+                    neighbour.gCost = ng
+                    neighbour.hCost = hurestics(neighbour, finishNode, 'manhattan_distance')
+                    neighbour.fCost = neighbour.gCost + neighbour.hCost
+                    neighbour.previousNode = currentNode   
+                    openList.push(neighbour) 
+            }
+
+        }  
+    }
+
+}*/
+
+export function aStarSearch(grid, startNode, finishNode){
+
+    if(!startNode || !finishNode || startNode === finishNode)
+        return false
+
+    let openList = []
+
+    const visitedNodes = []
+    
+    //const openSet = new Set()
+    const closedSet = new Set()
+
+    startNode.fCost = 0
+    startNode.gCost = 0
+    startNode.hCost = manhattanDistance(startNode, finishNode)
+
+    openList.push(startNode)
+    //openSet.add(startNode)
+
+    while(openList.length !== 0){
+
+        
+        //openList.heapify();
+        //console.log(openList);
+        let smallIndex = 0;
+
+        for(let i=0; i<openList.length; i++){
+            if( openList[i].fCost < openList[smallIndex].fCost){
+                smallIndex = i;
+            }
+        }
+        console.log(smallIndex);
+        let currentNode = openList.splice(smallIndex, 1)[0];
+        console.log(currentNode)
+        closedSet.add(currentNode)
+
+        visitedNodes.push(currentNode)
+
+        if(currentNode === finishNode){
+            return visitedNodes
+        }
+
+        const neighbours = getNeighbours(grid, currentNode)
+        //console.log(neighbours)
+        for(let i = 0, l = neighbours.length; i < l ; ++i){
+            const neighbour = neighbours[i]
+            
+            //console.log("Parent = "+ currentNode.row+" "+currentNode.col)
+
+            if(closedSet.has(neighbour))
+                continue
+            
+            let ng = currentNode.gCost + 1;
+
+            if(openList.includes(neighbour)){
+                console.log("before "+neighbour.gCost+" new "+ng)
+                if(ng < neighbour.gCost){
+                    neighbour.gCost = ng
+                    neighbour.hCost = hurestics(neighbour, finishNode, 'manhattan_distance')
+                    neighbour.fCost = neighbour.gCost + neighbour.hCost
+                    neighbour.previousNode = currentNode   
+                    //openList.push(neighbour) 
+                    console.log("after "+neighbour.gCost)
+                }
+
             }else{
                     neighbour.gCost = ng
                     neighbour.hCost = hurestics(neighbour, finishNode, 'manhattan_distance')
@@ -111,6 +191,7 @@ function getNeighbours(grid, node){
     if(col > 0) neighbours.push(grid[row][col - 1])
     if(col < grid[0].length - 1) neighbours.push(grid[row][col + 1])
     
+    //console.log(neighbours)
     return neighbours.filter(neighbour => !neighbour.isWall)
 }
 

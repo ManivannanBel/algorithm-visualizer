@@ -46,9 +46,10 @@ export class Node extends Component {
 
         return (
           <div ref={this.ref}
+          data-toggle="tooltip" data-placement="top" title={`${row} ${col}`}
             id={`node-${row}-${col}`}
             className={`node ${extraclassName}`}
-
+            
             onMouseDown={() => onMouseDown(row, col)}
             onMouseEnter={() => onMouseEnter(row, col)}
             onMouseUp={() => onMouseUp()}>
