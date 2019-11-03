@@ -6,6 +6,7 @@ import {breadthFristSearch, getBFSPath} from '../Algorithms/breadthFirstSearch'
 import {bestFirstSearch, getGBFSPath} from '../Algorithms/bestFirstSearch'
 import { aStarSearch, getAStarPath } from "../Algorithms/aStarSearch"
 import { bidirectionalSearch, getBidirectionalShortestPath } from "../Algorithms/bidirectionalSearch";
+import { recursiveDivsionUtil} from "../MazeGenerationAlgorithms/RecursiveDivisionMazeGeneration"
 
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
@@ -33,7 +34,7 @@ export class VisualizerComponent extends Component {
              mousePointerEvents : 'auto',
              selectedAlgorithm : '', 
              speed : 'medium',
-             animationSpeed : 20
+             animationSpeed : 30
         }
         
         //Refs for all the nodes
@@ -120,7 +121,7 @@ export class VisualizerComponent extends Component {
     componentDidMount() {
         const grid = []
         
-        for(let row = 0 ; row < 20 ; row++){
+        for(let row = 0 ; row < 21 ; row++){
             const columnRow = []
             const rowRef = []
             for(let column = 0 ; column < 50 ; column++){
@@ -533,6 +534,33 @@ export class VisualizerComponent extends Component {
       }
     }
 
+    generateWalls = (algorithm) => {
+      const {grid} = this.state;
+      let wallsToAnimate = [];
+      switch(algorithm){
+        case "recursive_division_horizontal":
+          wallsToAnimate = recursiveDivsionUtil(grid, 2, grid.length - 3, 2, grid[0].length - 3, "horizontal", true);
+          break;
+        case "recursive_division_vertical":
+            wallsToAnimate = recursiveDivsionUtil(grid, 2, grid.length - 3, 2, grid[0].length - 3, "vertical", true);
+            break;
+      }
+      //console.log(wallsToAnimate)
+      this.animateWalls(wallsToAnimate);
+    }
+
+    animateWalls = (wallsToAnimate) => {
+      const {grid} = this.state;
+      for(let i = 0; i < wallsToAnimate.length; i++){
+        setTimeout(() => {
+          const node = wallsToAnimate.shift();
+          const {row, col} = node;
+          this.nodeRef[row][col].current.toggleWall();
+          grid[row][col].isWall = true;
+        }, 10 * i);
+      }
+    }
+
     
     render() {
         const grid = this.state.grid
@@ -547,19 +575,24 @@ export class VisualizerComponent extends Component {
             <Navbar bg="light">
             <Navbar.Brand href="#">Algorithm Visualizer</Navbar.Brand>
             <NavDropdown title="Select Algorithm" id="basic-nav-dropdown" style={{ pointerEvents : this.state.mousePointerEvents }}>
-            <NavDropdown.Item href="" onClick={() => this.selectAlgorithm("Dijkstra Algorithm")}>Visualize Dijkstra</NavDropdown.Item>
-            <NavDropdown.Item href="" onClick={() => this.selectAlgorithm("Depth first search")}>Visualize Depth Fisrt Search</NavDropdown.Item>
-            <NavDropdown.Item href="" onClick={() => this.selectAlgorithm("Breadth frist search")}>Visualize Breadth Fisrt Search</NavDropdown.Item>
-            <NavDropdown.Item href="" onClick={() => this.selectAlgorithm("Greedy Best first search")}>Visualize Best Fisrt Search</NavDropdown.Item>
-            <NavDropdown.Item href="" onClick={() => this.selectAlgorithm("A* search")}>Visualize A* Search</NavDropdown.Item>
-            <NavDropdown.Item href="" onClick={() => this.selectAlgorithm("Bidirectional BFS")}>Visualize Bidirectional Search (BFS)</NavDropdown.Item>
+            <NavDropdown.Item href="" onClick={() => this.selectAlgorithm("Dijkstra Algorithm")}>Dijkstra</NavDropdown.Item>
+            <NavDropdown.Item href="" onClick={() => this.selectAlgorithm("Depth first search")}>Depth Fisrt Search</NavDropdown.Item>
+            <NavDropdown.Item href="" onClick={() => this.selectAlgorithm("Breadth frist search")}>Breadth Fisrt Search</NavDropdown.Item>
+            <NavDropdown.Item href="" onClick={() => this.selectAlgorithm("Greedy Best first search")}>Best Fisrt Search</NavDropdown.Item>
+            <NavDropdown.Item href="" onClick={() => this.selectAlgorithm("A* search")}>A* Search</NavDropdown.Item>
+            <NavDropdown.Item href="" onClick={() => this.selectAlgorithm("Bidirectional BFS")}>Bidirectional Search (BFS)</NavDropdown.Item>
             </NavDropdown>
-            <Nav.Link onClick={() => this.clearVisitedNode(true)} style={{ pointerEvents : this.state.mousePointerEvents }}>clear board</Nav.Link>
+            <NavDropdown title="Generate Maze" style={{ pointerEvents : this.state.mousePointerEvents }}>
+            <NavDropdown.Item onClick={() => this.generateWalls("recursive_division_horizontal")}>Horizontal Recursive Division</NavDropdown.Item>
+            <NavDropdown.Item onClick={() => this.generateWalls("recursive_division_vertical")}>Vertical Recursive Division</NavDropdown.Item>
+            </NavDropdown>
+            
+            <Nav.Link onClick={() => this.clearVisitedNode(true)} style={{ pointerEvents : this.state.mousePointerEvents }}>Clear Board</Nav.Link>
             <Nav.Link className="btn btn-danger" onClick={() => this.visualizeSelectedAlgorithm()} style={{ pointerEvents : this.state.mousePointerEvents }}>Visualize {this.state.selectedAlgorithm}</Nav.Link>
-            <NavDropdown title={`Speed ${this.state.speed}`} style={{ pointerEvents : this.state.mousePointerEvents }}>
-              <NavDropdown.Item onClick={() => this.selectSpeed("slow")}>slow</NavDropdown.Item>
-              <NavDropdown.Item onClick={() => this.selectSpeed("medium")}>medium</NavDropdown.Item>
-              <NavDropdown.Item onClick={() => this.selectSpeed("fast")}>fast</NavDropdown.Item>
+            <NavDropdown title={`Speed: ${this.state.speed}`} style={{ pointerEvents : this.state.mousePointerEvents }}>
+              <NavDropdown.Item onClick={() => this.selectSpeed("fast")}>Fast</NavDropdown.Item>
+              <NavDropdown.Item onClick={() => this.selectSpeed("medium")}>Medium</NavDropdown.Item>
+              <NavDropdown.Item onClick={() => this.selectSpeed("slow")}>Slow</NavDropdown.Item>
             </NavDropdown>
             </Navbar>
             </div>
