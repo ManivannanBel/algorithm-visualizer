@@ -1,13 +1,12 @@
-var wallsToAnimate = []
 export function recursiveDivsionUtil(grid, startRow, endRow, startCol, endCol, direction, boundaryWalls){
-    
-    recursiveDivsion(grid, startRow, endRow, startCol, endCol, direction, boundaryWalls);
+    const wallsToAnimate = []    
+    recursiveDivsion(grid, startRow, endRow, startCol, endCol, direction, boundaryWalls, wallsToAnimate);
     console.log(wallsToAnimate);
     console.log(grid)
     return wallsToAnimate;
 }
 
-function recursiveDivsion(grid, startRow, endRow, startCol, endCol, direction, boundaryWalls){
+function recursiveDivsion(grid, startRow, endRow, startCol, endCol, direction, boundaryWalls, wallsToAnimate){
     if(startRow > endRow || startCol > endCol){
         return;
     }
@@ -61,15 +60,15 @@ function recursiveDivsion(grid, startRow, endRow, startCol, endCol, direction, b
         }
 
         if(selectedRowPartition - 2 - startRow > endCol - startCol){
-            recursiveDivsion(grid, startRow, selectedRowPartition - 2, startCol , endCol, direction, boundaryWalls);
+            recursiveDivsion(grid, startRow, selectedRowPartition - 2, startCol , endCol, direction, boundaryWalls, wallsToAnimate);
         } else {
-            recursiveDivsion(grid, startRow, selectedRowPartition - 2, startCol , endCol, "vertical", boundaryWalls);
+            recursiveDivsion(grid, startRow, selectedRowPartition - 2, startCol , endCol, "vertical", boundaryWalls, wallsToAnimate);
         }
 
         if(endRow -(selectedRowPartition + 2) > endCol - startCol){
-            recursiveDivsion(grid, selectedRowPartition + 2, endRow, startCol , endCol, direction, boundaryWalls);
+            recursiveDivsion(grid, selectedRowPartition + 2, endRow, startCol , endCol, direction, boundaryWalls, wallsToAnimate);
         }else{
-            recursiveDivsion(grid, selectedRowPartition + 2, endRow, startCol , endCol, "vertical", boundaryWalls);
+            recursiveDivsion(grid, selectedRowPartition + 2, endRow, startCol , endCol, "vertical", boundaryWalls, wallsToAnimate);
         }
 
     }else{
@@ -104,15 +103,15 @@ function recursiveDivsion(grid, startRow, endRow, startCol, endCol, direction, b
         }
 
         if(endRow - startRow > selectedColumnPartition - 2- startCol){
-            recursiveDivsion(grid, startRow, endRow, startCol , selectedColumnPartition - 2, "horizontal", boundaryWalls);
+            recursiveDivsion(grid, startRow, endRow, startCol , selectedColumnPartition - 2, "horizontal", boundaryWalls, wallsToAnimate);
         }else{
-            recursiveDivsion(grid, startRow, endRow, startCol , selectedColumnPartition - 2, direction, boundaryWalls);
+            recursiveDivsion(grid, startRow, endRow, startCol , selectedColumnPartition - 2, direction, boundaryWalls, wallsToAnimate);
         }
 
         if(endRow - startRow > endCol - (selectedColumnPartition + 2)){
-            recursiveDivsion(grid, startRow, endRow, selectedColumnPartition + 2, endCol, "horizontal", boundaryWalls);
+            recursiveDivsion(grid, startRow, endRow, selectedColumnPartition + 2, endCol, "horizontal", boundaryWalls, wallsToAnimate);
         }else{
-            recursiveDivsion(grid, startRow, endRow, selectedColumnPartition + 2, endCol, direction, boundaryWalls);       
+            recursiveDivsion(grid, startRow, endRow, selectedColumnPartition + 2, endCol, direction, boundaryWalls, wallsToAnimate);       
         }
 
     }
