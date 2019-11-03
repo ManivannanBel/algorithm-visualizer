@@ -7,6 +7,7 @@ import {bestFirstSearch, getGBFSPath} from '../Algorithms/bestFirstSearch'
 import { aStarSearch, getAStarPath } from "../Algorithms/aStarSearch"
 import { bidirectionalSearch, getBidirectionalShortestPath } from "../Algorithms/bidirectionalSearch";
 import { recursiveDivsionUtil} from "../MazeGenerationAlgorithms/RecursiveDivisionMazeGeneration"
+import { randomeMaze } from "../MazeGenerationAlgorithms/RandomMaze"
 
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
@@ -34,7 +35,8 @@ export class VisualizerComponent extends Component {
              mousePointerEvents : 'auto',
              selectedAlgorithm : '', 
              speed : 'medium',
-             animationSpeed : 30
+             animationSpeed : 30,
+             description: "Select any path finding algorithm and play!!!"
         }
         
         //Refs for all the nodes
@@ -516,7 +518,28 @@ export class VisualizerComponent extends Component {
 
     selectAlgorithm = (algorithm) => {
       //console.log(algorithm)
-      this.setState({selectedAlgorithm : algorithm})
+      let description = "";
+      switch(algorithm){
+        case "Dijkstra Algorithm":
+          description = "Dijkstra's algorithm is a weighted graph search algorithm used to find the sortest path between nodes in a graph";
+          break;
+        case "Depth first search":
+            description = "Depth Fisrt Search is an unweighted graph search algorithm used for traversing or searching in a graph. It does not guarantee the shortest path";
+          break;
+        case "Breadth frist search":
+            description = "Breadth Fisrt Search is an unweighted graph search algorithm used for traversing or searching in a graph. It guarantees the shortest path";
+          break;
+        case "Greedy Best first search":
+            description = "Greedy Best first search is weighted and informed graph search algorithm, It does not guarantee the shortest path";
+          break;
+        case "A* search":
+            description = "A* search is a weighted and informed grapth search algorithm which arguably the best graph search algorithm. It guarantees the shortest path and mush faster than Dijkstra's";
+          break;
+        case "Bidirectional BFS":
+            description = "Bidirectional BFS is an unweighted graph search algorithm which gives the shortest path between the two nodes";
+          break;
+        }
+      this.setState({selectedAlgorithm : algorithm, description : description});
       //console.log(this.state.selectedAlgorithm)
     }
 
@@ -544,6 +567,8 @@ export class VisualizerComponent extends Component {
         case "recursive_division_vertical":
             wallsToAnimate = recursiveDivsionUtil(grid, 2, grid.length - 3, 2, grid[0].length - 3, "vertical", true);
             break;
+        case "random":
+            wallsToAnimate = randomeMaze(grid);
       }
       //console.log(wallsToAnimate)
       this.animateWalls(wallsToAnimate);
@@ -578,13 +603,14 @@ export class VisualizerComponent extends Component {
             <NavDropdown.Item href="" onClick={() => this.selectAlgorithm("Dijkstra Algorithm")}>Dijkstra</NavDropdown.Item>
             <NavDropdown.Item href="" onClick={() => this.selectAlgorithm("Depth first search")}>Depth Fisrt Search</NavDropdown.Item>
             <NavDropdown.Item href="" onClick={() => this.selectAlgorithm("Breadth frist search")}>Breadth Fisrt Search</NavDropdown.Item>
-            <NavDropdown.Item href="" onClick={() => this.selectAlgorithm("Greedy Best first search")}>Best Fisrt Search</NavDropdown.Item>
+            <NavDropdown.Item href="" onClick={() => this.selectAlgorithm("Greedy Best first search")}>Greedy Best Fisrt Search</NavDropdown.Item>
             <NavDropdown.Item href="" onClick={() => this.selectAlgorithm("A* search")}>A* Search</NavDropdown.Item>
             <NavDropdown.Item href="" onClick={() => this.selectAlgorithm("Bidirectional BFS")}>Bidirectional Search (BFS)</NavDropdown.Item>
             </NavDropdown>
             <NavDropdown title="Generate Maze" style={{ pointerEvents : this.state.mousePointerEvents }}>
             <NavDropdown.Item onClick={() => this.generateWalls("recursive_division_horizontal")}>Horizontal Recursive Division</NavDropdown.Item>
             <NavDropdown.Item onClick={() => this.generateWalls("recursive_division_vertical")}>Vertical Recursive Division</NavDropdown.Item>
+            <NavDropdown.Item onClick={() => this.generateWalls("random")}>Random Maze</NavDropdown.Item>
             </NavDropdown>
             
             <Nav.Link onClick={() => this.clearVisitedNode(true)} style={{ pointerEvents : this.state.mousePointerEvents }}>Clear Board</Nav.Link>
@@ -595,6 +621,9 @@ export class VisualizerComponent extends Component {
               <NavDropdown.Item onClick={() => this.selectSpeed("slow")}>Slow</NavDropdown.Item>
             </NavDropdown>
             </Navbar>
+            </div>
+            <div>
+              <p className="container description">{this.state.description}</p>
             </div>
             <div className="grid" style={{ pointerEvents : this.state.mousePointerEvents }}>
               <table>
