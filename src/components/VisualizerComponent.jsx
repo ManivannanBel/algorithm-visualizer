@@ -18,9 +18,9 @@ const START_POS_ROW = 10
 const START_POS_COL = 7
 const FINISH_POS_ROW = 11
 const FINISH_POS_COL = 45 
-const SLOW_SPEED = 30
-const MEDIUM_SPEED = 20
-const FAST_SPEED = 10
+const SLOW_SPEED = 60
+const MEDIUM_SPEED = 30
+const FAST_SPEED = 15
 
 export class VisualizerComponent extends Component {
 
@@ -31,7 +31,9 @@ export class VisualizerComponent extends Component {
              grid : [],
              mousePressed : false,
              mousePointerEvents : 'auto',
-             selectedAlgorithm : ''
+             selectedAlgorithm : '', 
+             speed : 'medium',
+             animationSpeed : 20
         }
         
         //Refs for all the nodes
@@ -248,25 +250,27 @@ export class VisualizerComponent extends Component {
 
     animateDijkstra = (visitedNodeInOrder, shortestPath) => {
         const grid = this.state.grid
+        const {animationSpeed} = this.state
         for(let i = 0; i < visitedNodeInOrder.length; i++){
             grid[visitedNodeInOrder[i].row][visitedNodeInOrder[i].col] = visitedNodeInOrder[i]
             if(i === visitedNodeInOrder.length - 1){
               setTimeout(() => {
                 this.printShortestPath(shortestPath, grid)
-              }, 10 * i)
+              }, animationSpeed * i)
             }
             setTimeout(() => {
                 const node = visitedNodeInOrder[i]
                 this.nodeRef[node.row][node.col].current.toggleVisited();
-            }, 10 * i)
+            }, animationSpeed * i)
         }
     }
 
     printShortestPath = (shortestPath, grid) => {
+      const {animationSpeed} = this.state
       if(shortestPath.length === 0){
         setTimeout(() => {
           this.setState({mousePointerEvents : 'auto'})
-        }, 30)
+        }, animationSpeed)
         return
       }
       for(let i = 0; i < shortestPath.length; i++){
@@ -279,9 +283,9 @@ export class VisualizerComponent extends Component {
             this.setState({grid : grid})
             setTimeout(() => {
               this.setState({mousePointerEvents : 'auto'})
-            }, 30 * i+1);
+            }, animationSpeed * i+1);
           }
-        }, 30 * i)
+        }, animationSpeed * i)
       }
       //console.log(this.state.algorithmRunning)
     }
@@ -306,17 +310,18 @@ export class VisualizerComponent extends Component {
 
     animateDepthFirstSearch = (visitedNodeInOrder, DFSPath) => {
       const grid = this.state.grid
+      const {animationSpeed} = this.state
       for(let i = 0; i < visitedNodeInOrder.length; i++){
         grid[visitedNodeInOrder[i].row][visitedNodeInOrder[i].col] = visitedNodeInOrder[i]
         if(i === visitedNodeInOrder.length - 1){
           setTimeout(() => {
             this.printShortestPath(DFSPath, grid)
-          }, i * 30)
+          }, i * animationSpeed)
         }
         setTimeout(() => {
           const node = visitedNodeInOrder[i]
           this.nodeRef[node.row][node.col].current.toggleVisited()
-        }, i * 30)
+        }, i * animationSpeed)
       }
     }
 
@@ -339,17 +344,18 @@ export class VisualizerComponent extends Component {
 
     animateBreadthFirstSearch = (visitedNodeInOrder, DFSPath) => {
       const grid = this.state.grid
+      const {animationSpeed} = this.state
       for(let i = 0; i < visitedNodeInOrder.length; i++){
         grid[visitedNodeInOrder[i].row][visitedNodeInOrder[i].col] = visitedNodeInOrder[i]
         if(i === visitedNodeInOrder.length - 1){
           setTimeout(() => {
             this.printShortestPath(DFSPath, grid)
-          }, i * 30)
+          }, i * animationSpeed)
         }
         setTimeout(() => {
           const node = visitedNodeInOrder[i]
           this.nodeRef[node.row][node.col].current.toggleVisited()
-        }, i * 30)
+        }, i * animationSpeed)
       }
     }
 
@@ -374,17 +380,18 @@ export class VisualizerComponent extends Component {
 
     animateBestFirstSearch = (visitedNodeInOrder, GBFSPath) => {
       const grid = this.state.grid
+      const {animationSpeed} = this.state
       for(let i = 0; i < visitedNodeInOrder.length; i++){
         grid[visitedNodeInOrder[i].row][visitedNodeInOrder[i].col] = visitedNodeInOrder[i]
         if(i === visitedNodeInOrder.length - 1){
           setTimeout(() => {
             this.printShortestPath(GBFSPath, grid)
-          }, i * 30)
+          }, i * animationSpeed)
         }
         setTimeout(() => {
           const node = visitedNodeInOrder[i]
           this.nodeRef[node.row][node.col].current.toggleVisited()
-        }, i * 30)
+        }, i * animationSpeed)
       }
     }
 
@@ -407,17 +414,18 @@ export class VisualizerComponent extends Component {
 
     animateAStarSearch = (visitedNodeInOrder, AStarPath) => {
       const grid = this.state.grid
+      const {animationSpeed} = this.state
       for(let i = 0; i < visitedNodeInOrder.length; i++){
         grid[visitedNodeInOrder[i].row][visitedNodeInOrder[i].col] = visitedNodeInOrder[i]
         if(i === visitedNodeInOrder.length - 1){
           setTimeout(() => {
             this.printShortestPath(AStarPath, grid)
-          }, i * 10)
+          }, i * animationSpeed)
         }
         setTimeout(() => {
           const node = visitedNodeInOrder[i]
           this.nodeRef[node.row][node.col].current.toggleVisited()
-        }, i * 10)
+        }, i * animationSpeed)
       }
     }
 
@@ -442,17 +450,18 @@ export class VisualizerComponent extends Component {
 
     animateBidirectionalSearch = (visitedNodeInOrder, GBFSPath) => {
       const grid = this.state.grid
+      const {animationSpeed} = this.state
       for(let i = 0; i < visitedNodeInOrder.length; i++){
         grid[visitedNodeInOrder[i].row][visitedNodeInOrder[i].col] = visitedNodeInOrder[i]
         if(i === visitedNodeInOrder.length - 1){
           setTimeout(() => {
             this.printShortestPath(GBFSPath, grid)
-          }, i * 15)
+          }, i * animationSpeed/2)
         }
         setTimeout(() => {
           const node = visitedNodeInOrder[i]
           this.nodeRef[node.row][node.col].current.toggleVisited()
-        }, i * 15)
+        }, i * animationSpeed/2)
       }
     }
 
@@ -510,6 +519,20 @@ export class VisualizerComponent extends Component {
       //console.log(this.state.selectedAlgorithm)
     }
 
+    selectSpeed = (speed) => {
+      switch(speed){
+        case "slow":
+          this.setState({animationSpeed : SLOW_SPEED, speed : speed})
+          break;
+        case "medium":
+          this.setState({animationSpeed : MEDIUM_SPEED, speed : speed})
+          break;
+        case "fast":
+          this.setState({animationSpeed : FAST_SPEED, speed : speed})
+          break;
+      }
+    }
+
     
     render() {
         const grid = this.state.grid
@@ -533,6 +556,11 @@ export class VisualizerComponent extends Component {
             </NavDropdown>
             <Nav.Link onClick={() => this.clearVisitedNode(true)} style={{ pointerEvents : this.state.mousePointerEvents }}>clear board</Nav.Link>
             <Nav.Link className="btn btn-danger" onClick={() => this.visualizeSelectedAlgorithm()} style={{ pointerEvents : this.state.mousePointerEvents }}>Visualize {this.state.selectedAlgorithm}</Nav.Link>
+            <NavDropdown title={`Speed ${this.state.speed}`} style={{ pointerEvents : this.state.mousePointerEvents }}>
+              <NavDropdown.Item onClick={() => this.selectSpeed("slow")}>slow</NavDropdown.Item>
+              <NavDropdown.Item onClick={() => this.selectSpeed("medium")}>medium</NavDropdown.Item>
+              <NavDropdown.Item onClick={() => this.selectSpeed("fast")}>fast</NavDropdown.Item>
+            </NavDropdown>
             </Navbar>
             </div>
             <div className="grid" style={{ pointerEvents : this.state.mousePointerEvents }}>
