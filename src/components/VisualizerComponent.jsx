@@ -420,12 +420,12 @@ export class VisualizerComponent extends Component {
         if(i === visitedNodeInOrder.length - 1){
           setTimeout(() => {
             this.printShortestPath(AStarPath, grid)
-          }, i * animationSpeed)
+          }, i * animationSpeed/1.5)
         }
         setTimeout(() => {
           const node = visitedNodeInOrder[i]
           this.nodeRef[node.row][node.col].current.toggleVisited()
-        }, i * animationSpeed)
+        }, i * animationSpeed/1.5)
       }
     }
 
@@ -456,12 +456,12 @@ export class VisualizerComponent extends Component {
         if(i === visitedNodeInOrder.length - 1){
           setTimeout(() => {
             this.printShortestPath(GBFSPath, grid)
-          }, i * animationSpeed/2)
+          }, i * animationSpeed/1.5)
         }
         setTimeout(() => {
           const node = visitedNodeInOrder[i]
           this.nodeRef[node.row][node.col].current.toggleVisited()
-        }, i * animationSpeed/2)
+        }, i * animationSpeed/1.5)
       }
     }
 
