@@ -552,7 +552,7 @@ export class VisualizerComponent extends Component {
             <NavDropdown.Item href="" onClick={() => this.selectAlgorithm("Breadth frist search")}>Visualize Breadth Fisrt Search</NavDropdown.Item>
             <NavDropdown.Item href="" onClick={() => this.selectAlgorithm("Greedy Best first search")}>Visualize Best Fisrt Search</NavDropdown.Item>
             <NavDropdown.Item href="" onClick={() => this.selectAlgorithm("A* search")}>Visualize A* Search</NavDropdown.Item>
-            <NavDropdown.Item href="" onClick={() => this.selectAlgorithm("Bidirectional BFS")}>Visualize Bidirectional Search Search (BFS)</NavDropdown.Item>
+            <NavDropdown.Item href="" onClick={() => this.selectAlgorithm("Bidirectional BFS")}>Visualize Bidirectional Search (BFS)</NavDropdown.Item>
             </NavDropdown>
             <Nav.Link onClick={() => this.clearVisitedNode(true)} style={{ pointerEvents : this.state.mousePointerEvents }}>clear board</Nav.Link>
             <Nav.Link className="btn btn-danger" onClick={() => this.visualizeSelectedAlgorithm()} style={{ pointerEvents : this.state.mousePointerEvents }}>Visualize {this.state.selectedAlgorithm}</Nav.Link>
